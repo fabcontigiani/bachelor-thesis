@@ -89,11 +89,112 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 % ==============================================================================
 \chapter{Introducción}
 
-\cite{redmon2016yolo}
+La conservación de la fauna silvestre y la protección de áreas naturales
+representan desafíos críticos en la actualidad. La pérdida de biodiversidad,
+la \gls{caza-furtiva} y la intrusión humana en ecosistemas protegidos amenazan
+el equilibrio ecológico y la supervivencia de numerosas especies. Ante
+esta problemática, surge la necesidad de implementar sistemas de monitoreo
+que permitan vigilar estas áreas de manera continua y eficiente.
+
+Tradicionalmente, el monitoreo de fauna silvestre se ha realizado mediante
+\glspl{camara-trampa}, dispositivos que capturan imágenes cuando detectan
+movimiento. Sin embargo, estos sistemas convencionales presentan limitaciones
+significativas: requieren revisión manual periódica, no permiten alertas
+en \gls{tiempo-real}, y generan grandes volúmenes de datos que deben ser
+analizados manualmente por expertos.
+
+El avance de tecnologías como el \gls{iot} y la \gls{ia} ofrece nuevas
+posibilidades para superar estas limitaciones. La combinación de redes
+de sensores inalámbricos con algoritmos de \gls{deteccion-objetos} permite
+desarrollar sistemas capaces de identificar automáticamente fauna silvestre,
+personas y vehículos, generando alertas inmediatas ante eventos relevantes.
+
+El presente trabajo propone el diseño e implementación de un sistema de
+monitoreo y alerta temprana para áreas protegidas, que integra una red
+de nodos de captura basados en \gls{ESP32} comunicados mediante \gls{ESP-MESH},
+un servidor de procesamiento con \gls{ia} basado en \gls{speciesnet}, y
+un sistema de notificaciones a través de \gls{telegram-bot}.
 
 \section{Contexto y motivación}
 
+Las áreas protegidas enfrentan amenazas constantes que van desde la caza
+ilegal de especies en peligro hasta la intrusión de personas no autorizadas
+y vehículos en zonas restringidas. Los guardaparques y administradores
+de estas áreas frecuentemente carecen de los recursos humanos y tecnológicos
+necesarios para mantener una vigilancia efectiva sobre extensas superficies
+de terreno, muchas veces en ubicaciones remotas con acceso limitado a
+infraestructura de comunicaciones.
+
+Las cámaras trampa tradicionales, aunque útiles para la investigación
+científica, no fueron diseñadas para la vigilancia en tiempo real. Las
+imágenes capturadas permanecen almacenadas en tarjetas de memoria que
+deben ser recolectadas físicamente, lo que implica visitas frecuentes
+al campo y retrasos significativos entre la captura de un evento y su
+descubrimiento. Para cuando se detecta una intrusión o un acto de \gls{caza-furtiva},
+los responsables ya se encuentran lejos del área.
+
+Es cierto que en la actualidad existen cámaras trampa más modernas que
+incorporan conectividad celular o satelital, permitiendo el envío remoto
+de imágenes. Sin embargo, estos dispositivos suelen tener un costo
+significativamente mayor, lo que limita su adopción masiva especialmente
+en países en vías de desarrollo, donde paradójicamente se concentra gran
+parte de la biodiversidad mundial. Además, muchas de estas soluciones
+comerciales dependen de servicios en la nube propietarios con costos
+de suscripción recurrentes.
+
+La motivación de este proyecto surge de la necesidad de transformar el
+paradigma del monitoreo pasivo hacia un sistema activo de vigilancia
+inteligente, pero de manera accesible y de bajo costo. Un sistema que
+no solo capture imágenes, sino que las transmita en \gls{tiempo-real}, las
+analice automáticamente mediante algoritmos de \gls{ia}, y genere alertas
+inmediatas cuando se detecten eventos de interés, ya sea la presencia
+de fauna silvestre para fines de investigación, o la detección de intrusos
+para fines de seguridad. Todo esto utilizando componentes de hardware
+económicos y software de \gls{codigo-abierto}.
+
 \section{Estructura del documento}
+
+El presente documento se organiza en diez capítulos que describen de
+manera progresiva el desarrollo del sistema propuesto:
+
+\begin{description}
+	\item[Capítulo 1 - Introducción:] Presenta el contexto general del
+	      proyecto, la motivación y la estructura del documento.
+
+	\item[Capítulo 2 - Antecedentes:] Revisa trabajos relacionados,
+	      soluciones comerciales existentes y el estado del arte en sistemas
+	      de monitoreo de fauna y detección de intrusos.
+
+	\item[Capítulo 3 - Planteamiento del Problema:] Describe la
+	      problemática de las áreas protegidas, las limitaciones de los
+	      sistemas tradicionales y la justificación del proyecto.
+
+	\item[Capítulo 4 - Objetivos y Alcance:] Define los objetivos
+	      generales y específicos, así como el alcance y las limitaciones
+	      del trabajo.
+
+	\item[Capítulo 5 - Marco Teórico:] Presenta los fundamentos teóricos
+	      sobre \gls{iot}, redes \gls{mesh}, \gls{ia} aplicada a visión por
+	      computadora, y las tecnologías utilizadas.
+
+	\item[Capítulo 6 - Metodología:] Describe el enfoque metodológico,
+	      las etapas de desarrollo y las herramientas empleadas.
+
+	\item[Capítulo 7 - Diseño del Sistema:] Detalla la arquitectura
+	      general, el diseño del hardware, la red \gls{mesh}, el servicio de
+	      detección y el servidor de aplicación.
+
+	\item[Capítulo 8 - Implementación:] Presenta la implementación de
+	      cada componente: nodos \gls{mesh}, nodo raíz, servicio de detección
+	      y servidor de aplicación.
+
+	\item[Capítulo 9 - Pruebas y Resultados:] Documenta las pruebas
+	      realizadas y analiza los resultados obtenidos en conectividad,
+	      detección, rendimiento y consumo energético.
+
+	\item[Capítulo 10 - Conclusiones:] Resume las conclusiones generales,
+	      los aportes del trabajo, trabajos futuros y recomendaciones.
+\end{description}
 
 % ==============================================================================
 % Capítulo 2: Antecedentes
