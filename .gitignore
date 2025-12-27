@@ -1,0 +1,54 @@
+# — ignore common LaTeX intermediate and output files
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+*.bbl
+*.blg
+*.brf
+*.nav
+*.snm
+*.synctex.gz
+*.fdb_latexmk
+*.auxlock
+*.run.xml
+*.xdv
+*.dvi
+*.ps
+*.pdfsync
+*.bcf
+
+# minted / Pygments cache
+_minted-*/
+*.pyg
+
+# backup / temp files
+*~
+*.bak
+*.backup
+*.orig
+*.tmp
+# Emacs/Vim swap and lock files
+.#*
+*~
+*.swp
+*.swo
+
+# build directories (if you use one)
+_build/
+build/
+output/
+
+# editor / IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

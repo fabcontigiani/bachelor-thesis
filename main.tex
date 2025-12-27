@@ -1,0 +1,74 @@
+% Tipo de documento y márgenes
+\documentclass[a4paper, 12pt]{report}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry}
+
+% Codificación y lenguaje
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage[spanish]{babel}
+
+% Imágenes
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+% Bibliografía
+\usepackage[nottoc]{tocbibind}
+\usepackage[style=ieee, backend=biber]{biblatex}
+\addbibresource{referencias.bib}
+
+% Links
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue}
+
+% Glosario
+\usepackage{datatool}[=v2.32]
+\usepackage[toc,acronym]{glossaries}
+\setacronymstyle{long-short}
+\makenoidxglossaries
+\loadglsentries{glosario}
+
+\usepackage[locale=DE]{siunitx}
+
+\title{Sistema de Monitoreo y Alerta Temprana basado en Inteligencia Artificial
+para Áreas Protegidas}
+\author{Autores:\\Fabrizio Martin Contigiani\\Gabriel Orlando Da
+Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\begin{abstract}
+	Esta primera versión del borrador se ha centrado primordialmente en
+	la definición de la estructura general y la articulación del
+	contenido central del documento.
+	En consecuencia, se priorizaron estos aspectos, dejando la
+	implementación de detalles de formato, tales como la carátula, el
+	encabezado y el pie de página, para una próxima iteración o entrega.
+	Asimismo, las secciones que aún requieren de ser escritas han sido
+	completadas temporalmente con texto de relleno para poder
+	visualizar correctamente la estructura del documento.
+
+	\vspace{2em}
+	\noindent\textbf{Palabras Clave} - Cámaras Trampa, Internet de las Cosas,
+	Inteligencia Artificial, Monitoreo de Fauna, Detección de Intrusos,
+	Vigilancia, Wi-Fi Mesh
+\end{abstract}
+
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+\printnoidxglossary[type=main]
+\printnoidxglossary[type=\acronymtype]
+
+\chapter{Introducción}
+
+\gls{ia} \gls{miniz}
+
+\end{document}
