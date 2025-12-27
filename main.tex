@@ -39,23 +39,40 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 
 \maketitle
 
-\tableofcontents
-
 \begin{abstract}
-	Esta primera versión del borrador se ha centrado primordialmente en
-	la definición de la estructura general y la articulación del
-	contenido central del documento.
-	En consecuencia, se priorizaron estos aspectos, dejando la
-	implementación de detalles de formato, tales como la carátula, el
-	encabezado y el pie de página, para una próxima iteración o entrega.
-	Asimismo, las secciones que aún requieren de ser escritas han sido
-	completadas temporalmente con texto de relleno para poder
-	visualizar correctamente la estructura del documento.
+	El presente trabajo describe el diseño e implementación de un sistema
+	de monitoreo y alerta temprana para áreas protegidas, que combina
+	tecnologías de \gls{iot} con \gls{ia}
+	para la detección automática de fauna silvestre, personas y vehículos.
+
+	El sistema está compuesto por una red de \glspl{nodo} de captura basados en
+	microcontroladores \gls{ESP32} equipados con cámaras, los cuales se comunican
+	mediante el protocolo \gls{ESP-MESH} para transmitir imágenes hacia un
+	\gls{nodo-raiz}. Este nodo actúa como puerta de enlace, reenviando las imágenes
+	a un servidor remoto a través de \gls{tcp}/IP.
+
+	En el servidor, las imágenes son procesadas por un servicio de
+	\gls{inferencia} basado en \gls{speciesnet}, un modelo de detección de objetos
+	desarrollado por Google que utiliza \gls{yolov5}. Este modelo permite
+	identificar y clasificar especies de fauna silvestre, así como detectar
+	la presencia de humanos y vehículos, generando alertas automáticas
+	ante posibles intrusiones.
+
+	La arquitectura del servidor incluye una aplicación web desarrollada
+	en \gls{django} para la gestión de imágenes, un \gls{telegram-bot} para el
+	envío de notificaciones en tiempo real, y una base de datos \gls{postgresql}
+	para el almacenamiento persistente. Todo el sistema está
+	contenedorizado mediante \gls{docker} para facilitar su despliegue.
+
+	Los resultados demuestran la viabilidad de implementar un sistema de
+	vigilancia inteligente de bajo costo para áreas protegidas, capaz de
+	operar de manera autónoma y alertar a los administradores ante
+	eventos relevantes.
 
 	\vspace{2em}
 	\noindent\textbf{Palabras Clave} - Cámaras Trampa, Internet de las Cosas,
 	Inteligencia Artificial, Monitoreo de Fauna, Detección de Intrusos,
-	Vigilancia, Wi-Fi Mesh
+	ESP-MESH, SpeciesNet, YOLO
 \end{abstract}
 
 \tableofcontents
@@ -72,32 +89,59 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 % ==============================================================================
 \chapter{Introducción}
 
-\gls{ia} \gls{miniz} \cite{redmon2016yolo}
+\cite{redmon2016yolo}
 
 \section{Contexto y motivación}
-
-\section{Planteamiento del problema}
-
-\section{Justificación}
-
-\section{Objetivos}
-\subsection{Objetivo general}
-\subsection{Objetivos específicos}
-
-\section{Alcance y limitaciones}
 
 \section{Estructura del documento}
 
 % ==============================================================================
-% Capítulo 2: Marco Teórico
+% Capítulo 2: Antecedentes
 % ==============================================================================
-\chapter{Marco Teórico}
+\chapter{Antecedentes}
+
+\section{Trabajos relacionados}
+
+\section{Soluciones comerciales existentes}
+
+\section{Estado del arte}
+
+\section{Análisis comparativo}
+
+% ==============================================================================
+% Capítulo 3: Planteamiento del Problema
+% ==============================================================================
+\chapter{Planteamiento del Problema}
 
 \section{Áreas protegidas y conservación de fauna silvestre}
 
-\section{Sistemas de vigilancia y monitoreo}
-\subsection{Cámaras trampa tradicionales}
-\subsection{Sistemas de detección de intrusos}
+\section{Problemática de la vigilancia en áreas remotas}
+
+\section{Sistemas de monitoreo tradicionales}
+\subsection{Cámaras trampa convencionales}
+\subsection{Limitaciones actuales}
+
+\section{Necesidad de detección de intrusos}
+
+\section{Justificación del proyecto}
+
+% ==============================================================================
+% Capítulo 4: Objetivos y Alcance
+% ==============================================================================
+\chapter{Objetivos y Alcance}
+
+\section{Objetivo general}
+
+\section{Objetivos específicos}
+
+\section{Alcance del proyecto}
+
+\section{Limitaciones}
+
+% ==============================================================================
+% Capítulo 5: Marco Teórico
+% ==============================================================================
+\chapter{Marco Teórico}
 
 \section{Internet de las Cosas (IoT)}
 \subsection{Arquitecturas IoT}
@@ -119,20 +163,7 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 \subsection{Framework Django}
 
 % ==============================================================================
-% Capítulo 3: Antecedentes
-% ==============================================================================
-\chapter{Antecedentes}
-
-\section{Trabajos relacionados}
-
-\section{Soluciones comerciales existentes}
-
-\section{Estado del arte}
-
-\section{Análisis comparativo}
-
-% ==============================================================================
-% Capítulo 4: Metodología
+% Capítulo 6: Metodología
 % ==============================================================================
 \chapter{Metodología}
 
@@ -145,7 +176,7 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 \section{Métricas de evaluación}
 
 % ==============================================================================
-% Capítulo 5: Diseño del Sistema
+% Capítulo 7: Diseño del Sistema
 % ==============================================================================
 \chapter{Diseño del Sistema}
 
@@ -174,7 +205,7 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 \subsection{Bot de Telegram y sistema de alertas}
 
 % ==============================================================================
-% Capítulo 6: Implementación
+% Capítulo 8: Implementación
 % ==============================================================================
 \chapter{Implementación}
 
@@ -201,7 +232,7 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 \subsection{Despliegue con Docker Compose}
 
 % ==============================================================================
-% Capítulo 7: Pruebas y Resultados
+% Capítulo 9: Pruebas y Resultados
 % ==============================================================================
 \chapter{Pruebas y Resultados}
 
@@ -229,7 +260,7 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 \section{Análisis de resultados}
 
 % ==============================================================================
-% Capítulo 8: Conclusiones
+% Capítulo 10: Conclusiones
 % ==============================================================================
 \chapter{Conclusiones}
 
