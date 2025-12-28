@@ -4,7 +4,6 @@
 
 % Codificación y lenguaje
 \usepackage[utf8]{inputenc}
-\usepackage{csquotes}
 \usepackage[spanish,es-tabla]{babel}
 
 % Imágenes
@@ -18,6 +17,17 @@
 % Gráficos
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+
+% Código fuente
+\usepackage{minted}
+\setminted{
+	linenos,
+	breaklines,
+	fontsize=\footnotesize,
+	frame=lines,
+	framesep=2mm
+}
+\usepackage{csquotes}
 
 % Bibliografía
 \usepackage[nottoc]{tocbibind}
@@ -35,6 +45,7 @@
 \makenoidxglossaries
 \loadglsentries{glosario}
 
+% Unidades
 \usepackage[locale=DE]{siunitx}
 
 \title{Sistema de Monitoreo y Alerta Temprana basado en Inteligencia Artificial
@@ -2379,7 +2390,20 @@ implementaciones:
 \chapter{Esquemáticos del hardware}
 
 \chapter{Código fuente relevante}
+
 \section{Firmware del nodo mesh}
+
+El archivo principal del firmware del nodo mesh (\texttt{mesh\_node.c}) contiene
+la lógica de inicialización, captura de imágenes, detección de movimiento y
+comunicación con la red mesh. A continuación se presenta la función principal
+\texttt{app\_main()} que inicializa todos los componentes del sistema:
+
+\inputminted[firstline=634, lastline=730, firstnumber=634]{c}{src/mesh-node-capstone-project/main/mesh_node.c}
+
+La función \texttt{capture\_and\_save\_photo()} es responsable de capturar una
+imagen, guardarla en la tarjeta SD y transmitirla a través de la red mesh:
+
+\inputminted[firstline=419, lastline=483, firstnumber=419]{c}{src/mesh-node-capstone-project/main/mesh_node.c}
 \section{Firmware del nodo raíz}
 \section{Servidor de detección}
 \section{Aplicación Django}
