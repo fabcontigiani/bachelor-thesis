@@ -5,6 +5,7 @@
 % Codificación y lenguaje
 \usepackage[utf8]{inputenc}
 \usepackage[spanish,es-tabla]{babel}
+\usepackage{csquotes}
 
 % Imágenes
 \usepackage{graphicx}
@@ -19,15 +20,36 @@
 \pgfplotsset{compat=1.18}
 
 % Código fuente
-\usepackage{minted}
-\setminted{
-	linenos,
-	breaklines,
-	fontsize=\footnotesize,
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Colores para syntax highlighting
+\definecolor{codegreen}{rgb}{0.2,0.6,0.2}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.0,0.4,0.7}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+
+\lstset{
+	basicstyle=\ttfamily\footnotesize,
+	backgroundcolor=\color{backcolour},
+	commentstyle=\color{codegreen}\itshape,
+	keywordstyle=\color{codeblue}\bfseries,
+	stringstyle=\color{codepurple},
+	numberstyle=\tiny\color{codegray},
+	numbers=left,
+	stepnumber=1,
+	numbersep=5pt,
 	frame=lines,
-	framesep=2mm
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=4,
+	showstringspaces=false,
+	captionpos=b,
+	language=C
 }
-\usepackage{csquotes}
+\renewcommand{\lstlistingname}{Código}
+\renewcommand{\lstlistlistingname}{Índice de códigos fuente}
 
 % Bibliografía
 \usepackage[nottoc]{tocbibind}
@@ -99,6 +121,9 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 \listoffigures
 
 \listoftables
+
+\lstlistoflistings
+\addcontentsline{toc}{chapter}{\lstlistlistingname}
 
 \printnoidxglossary[type=main]
 \printnoidxglossary[type=\acronymtype]
@@ -2395,15 +2420,17 @@ implementaciones:
 
 El archivo principal del firmware del nodo mesh (\texttt{mesh\_node.c}) contiene
 la lógica de inicialización, captura de imágenes, detección de movimiento y
-comunicación con la red mesh. A continuación se presenta la función principal
-\texttt{app\_main()} que inicializa todos los componentes del sistema:
+comunicación con la red mesh. El código~\ref{lst:app-main} presenta la función
+principal \texttt{app\_main()} que inicializa todos los componentes del sistema.
 
-\inputminted[firstline=634, lastline=730, firstnumber=634]{c}{src/mesh-node-capstone-project/main/mesh_node.c}
+\lstinputlisting[firstline=634, lastline=730, firstnumber=634, caption={Función principal \texttt{app\_main()} del nodo mesh.}, label=lst:app-main]{src/mesh-node-capstone-project/main/mesh_node.c}
 
-La función \texttt{capture\_and\_save\_photo()} es responsable de capturar una
-imagen, guardarla en la tarjeta SD y transmitirla a través de la red mesh:
+El código~\ref{lst:capture-photo} muestra la función
+\texttt{capture\_and\_save\_photo()}, responsable de capturar una imagen,
+guardarla en la tarjeta SD y transmitirla a través de la red mesh.
 
-\inputminted[firstline=419, lastline=483, firstnumber=419]{c}{src/mesh-node-capstone-project/main/mesh_node.c}
+\lstinputlisting[firstline=419, lastline=483, firstnumber=419, caption={Función de captura y envío de imágenes.}, label=lst:capture-photo]{src/mesh-node-capstone-project/main/mesh_node.c}
+
 \section{Firmware del nodo raíz}
 \section{Servidor de detección}
 \section{Aplicación Django}

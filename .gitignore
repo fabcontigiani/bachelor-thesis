@@ -35,9 +35,8 @@
 *.glsdefs
 *.ist
 
-# minted / Pygments cache
-_minted*/
-*.pyg
+# Listings
+*.lol
 
 # backup / temp files
 *~
