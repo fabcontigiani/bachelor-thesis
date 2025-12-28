@@ -15,6 +15,10 @@
 % Tablas
 \usepackage{tabularray}
 
+% Gráficos
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
 % Bibliografía
 \usepackage[nottoc]{tocbibind}
 \usepackage[style=ieee, backend=biber]{biblatex}
@@ -2388,5 +2392,520 @@ implementaciones:
 \chapter{Especificaciones técnicas}
 
 \chapter{Análisis de viabilidad económica}
+
+El presente anexo desarrolla un análisis de viabilidad económica del
+sistema propuesto, evaluando su potencial como emprendimiento comercial
+para la provisión de servicios de monitoreo de fauna silvestre y
+detección de intrusos.
+
+\section{Modelo de negocio}
+
+El modelo de negocio propuesto se basa en dos fuentes de ingreso:
+
+\begin{description}
+	\item[Cobro por instalación:] Un pago inicial por parte del cliente
+	      que cubre el costo del hardware (nodos de cámara y nodo raíz),
+	      la instalación física del sistema en el sitio del cliente, y
+	      la configuración inicial del servicio.
+	\item[Suscripción mensual:] Un cobro recurrente que incluye el acceso
+	      al servicio de procesamiento de imágenes con \gls{ia}, el
+	      almacenamiento de imágenes en la nube, las notificaciones vía
+	      \gls{telegram-bot}, y el soporte técnico.
+\end{description}
+
+Este modelo permite recuperar los costos de hardware en el momento de
+la venta, mientras que la suscripción genera ingresos recurrentes que
+aumentan con cada nuevo cliente, creando un flujo de caja predecible
+y creciente.
+
+\section{Segmentación de mercado}
+
+El mercado objetivo se compone de dos segmentos principales en la
+provincia de Misiones, Argentina, como se detalla en la
+Tabla~\ref{tab:segmentacion-mercado}.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Segmentación del mercado objetivo.}
+	\label{tab:segmentacion-mercado}
+	\begin{tblr}{
+			colspec = {X[l] r},
+			row{1} = {font=\bfseries},
+			hlines,
+		}
+		Segmento                       & Cantidad \\
+		Reservas naturales en Misiones & 116      \\
+		\Gls{eap} con bosques y montes & 10,802   \\
+		{Total mercado potencial}      & 10,918   \\
+		{Mercado alcanzado (objetivo)} & 150      \\
+		{Porcentaje del mercado}       & 1.37\%   \\
+	\end{tblr}
+\end{table}
+
+La proyección considera alcanzar 28 nuevos clientes por año durante
+los primeros 5 años de operación, llegando a 140 clientes activos al
+final del período analizado.
+
+\section{Costos fijos}
+
+Los costos fijos mensuales contemplan los gastos operativos necesarios
+para mantener la operación del emprendimiento, detallados en la
+Tabla~\ref{tab:costos-fijos}.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Estructura de costos fijos.}
+	\label{tab:costos-fijos}
+	\begin{tblr}{
+			colspec = {X[l] r r},
+			row{1} = {font=\bfseries},
+			row{11} = {font=\bfseries},
+			hlines,
+		}
+		Concepto     & Mensual (USD) & Anual (USD) \\
+		Alquiler     & 150.00        & 1,800.00    \\
+		Electricidad & 100.00        & 1,200.00    \\
+		Agua         & 30.00         & 360.00      \\
+		Dominio      & 3.00          & 36.00       \\
+		Hosting      & 5.00          & 60.00       \\
+		Internet     & 22.00         & 264.00      \\
+		Sueldos      & 400.00        & 4,800.00    \\
+		Teléfono     & 8.00          & 96.00       \\
+		Seguros      & 15.00         & 180.00      \\
+		Total        & 733.00        & 8,796.00    \\
+	\end{tblr}
+\end{table}
+
+\section{Costos variables}
+
+Los costos variables se estructuran en tres categorías según el tipo
+de producto o servicio:
+
+\subsection{Suscripción mensual}
+
+La Tabla~\ref{tab:cv-suscripcion} detalla el costo de provisión del
+servicio por cada susciptor activo.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Costos variables por suscripción.}
+	\label{tab:cv-suscripcion}
+	\begin{tblr}{
+		colspec = {X[l] r},
+		row{1} = {font=\bfseries},
+		row{4,5,6} = {font=\bfseries},
+				hlines,
+			}
+		Componente            & Costo (USD) \\
+		API de inferencia     & 2.00        \\
+		Hosting base de datos & 1.00        \\
+		Costo total           & 3.00        \\
+		Precio venta          & 50.00       \\
+		Margen bruto          & 1,567\%     \\
+	\end{tblr}
+\end{table}
+
+\subsection{Nodo de cámara}
+
+La Tabla~\ref{tab:cv-camara} presenta el desglose de costos de fabricación
+de cada nodo de cámara.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Costos variables por nodo de cámara.}
+	\label{tab:cv-camara}
+	\begin{tblr}{
+		colspec = {X[l] r},
+		row{1} = {font=\bfseries},
+		row{14,15,16} = {font=\bfseries},
+				hlines,
+			}
+		Componente           & Costo (USD) \\
+		ESP32-CAM            & 9.00        \\
+		Baterías \gls{18650} & 18.00       \\
+		PCB                  & 1.00        \\
+		Sensor PIR           & 1.00        \\
+		Cables               & 1.00        \\
+		Estaño               & 1.00        \\
+		Conectores           & 3.00        \\
+		Filamento \gls{pla}  & 3.00        \\
+		Abrazaderas          & 5.00        \\
+		Insertos             & 1.00        \\
+		Tornillos            & 1.00        \\
+		\Gls{buck-converter} & 1.00        \\
+		Costo total          & 45.00       \\
+		Precio venta         & 75.00       \\
+		Margen bruto         & 67\%        \\
+	\end{tblr}
+\end{table}
+
+\subsection{Nodo raíz}
+
+La Tabla~\ref{tab:cv-raiz} muestra los costos asociados a cada nodo raíz.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Costos variables por nodo raíz.}
+	\label{tab:cv-raiz}
+	\begin{tblr}{
+		colspec = {X[l] r},
+		row{1} = {font=\bfseries},
+		row{8,9,10} = {font=\bfseries},
+				hlines,
+			}
+		Componente          & Costo (USD) \\
+		ESP32 DevKit        & 3.00        \\
+		Cables              & 1.00        \\
+		Estaño              & 1.00        \\
+		Filamento \gls{pla} & 3.00        \\
+		Insertos            & 1.00        \\
+		Tornillos           & 1.00        \\
+		Costo total         & 10.00       \\
+		Precio venta        & 100.00      \\
+		Margen bruto        & 900\%       \\
+	\end{tblr}
+\end{table}
+
+\section{Bienes de capital}
+
+La inversión inicial contempla la adquisición de equipamiento para
+fabricación, logística y operaciones, según se detalla en la
+Tabla~\ref{tab:bienes-capital}.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Inversión en bienes de capital.}
+	\label{tab:bienes-capital}
+	\begin{tblr}{
+		colspec = {X[l] r c},
+		row{1} = {font=\bfseries},
+		row{9,11} = {font=\bfseries},
+				hlines,
+			}
+		Concepto             & Precio (USD) & Amortización (años) \\
+		Camioneta            & 15,000.00    & 5                   \\
+		Impresora 3D         & 450.00       & 3                   \\
+		Ploteo               & 100.00       & 3                   \\
+		PC de Escritorio     & 200.00       & 3                   \\
+		Insumos de Oficina   & 1,000.00     & 3                   \\
+		Estación de Soldado  & 150.00       & 3                   \\
+		Multímetro           & 30.00        & 3                   \\
+		Total equipos        & 16,930.00    &                     \\
+		Mano de obra inicial & 3,600.00     & (240 hs × \$15/h)   \\
+		Inversión total      & 20,530.00    &                     \\
+	\end{tblr}
+\end{table}
+
+\section{Flujo de caja operativo}
+
+El flujo de caja operativo proyecta los ingresos y egresos sin considerar
+financiamiento externo, como se presenta en la Tabla~\ref{tab:flujo-operativo}.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Flujo de caja operativo proyectado (USD).}
+	\label{tab:flujo-operativo}
+	\small
+	\begin{tblr}{
+		colspec = {X[l] r r r r r r},
+		row{1} = {font=\bfseries},
+		row{15,16} = {font=\bfseries},
+				hlines,
+			}
+		Concepto             & Año 0   & Año 1   & Año 2   & Año 3   & Año 4   & Año 5   \\
+		Suscripciones acum.  &         & 28      & 56      & 84      & 112     & 140     \\
+		Cámaras vendidas     &         & 280     & 280     & 280     & 280     & 280     \\
+		Nodos raíz vendidos  &         & 28      & 28      & 28      & 28      & 28      \\
+		Ingreso total        &         & 25,200  & 26,600  & 28,000  & 29,400  & 30,800  \\
+		Costo total          &         & -21,760 & -21,844 & -21,928 & -22,012 & -22,096 \\
+		Amortización         &         & -3,643  & -3,643  & -3,643  & -3,000  & -3,000  \\
+		Resultado antes imp. &         & -203    & 1,113   & 2,429   & 4,388   & 5,704   \\
+		Impuesto ganancias   &         & 0       & -389    & -850    & -1,536  & -1,996  \\
+		Resultado neto       &         & -203    & 723     & 1,579   & 2,852   & 3,708   \\
+		Inversión inicial    & -20,530 &         &         &         &         &         \\
+		Recupero IVA         &         & 3,150   &         &         &         &         \\
+		Valor residual       &         &         &         &         &         & 4,233   \\
+		Flujo de caja        & -20,530 & 6,590   & 4,367   & 5,222   & 5,852   & 6,708   \\
+		Acumulado            & -20,530 & -13,940 & -9,573  & -4,351  & 1,501   & 8,208   \\
+	\end{tblr}
+\end{table}
+
+El período de recupero de la inversión se alcanza durante el \textbf{Año 4}.
+
+\section{Flujo de caja del inversionista}
+
+El análisis considera un financiamiento parcial mediante préstamo
+bancario bajo el sistema francés de amortización:
+
+\begin{table}[htbp]
+	\centering
+	\caption{Condiciones del financiamiento.}
+	\label{tab:financiamiento}
+	\begin{tblr}{
+			colspec = {X[l] r},
+			row{1} = {font=\bfseries},
+			row{7} = {font=\bfseries},
+			hlines,
+		}
+		Parámetro               & Valor         \\
+		Monto del préstamo      & 15,000.00 USD \\
+		Plazo                   & 5 años        \\
+		Tasa de interés         & 5\% anual     \\
+		Cuota anual             & 3,464.62 USD  \\
+		Sistema de amortización & Francés       \\
+		Inversión propia        & 5,530.00 USD  \\
+	\end{tblr}
+\end{table}
+La Tabla~\ref{tab:financiamiento} resume las condiciones del préstamo
+y la Tabla~\ref{tab:flujo-inversionista} presenta el flujo de caja
+resultante para el inversionista.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Flujo de caja del inversionista (USD).}
+	\label{tab:flujo-inversionista}
+	\small
+	\begin{tblr}{
+		colspec = {X[l] r r r r r r},
+		row{1} = {font=\bfseries},
+		row{9,10} = {font=\bfseries},
+				hlines,
+			}
+		Concepto          & Año 0  & Año 1   & Año 2   & Año 3   & Año 4   & Año 5   \\
+		Ingreso total     &        & 25,200  & 26,600  & 28,000  & 29,400  & 30,800  \\
+		Costo total       &        & -21,760 & -21,844 & -21,928 & -22,012 & -22,096 \\
+		Cuota préstamo    &        & -3,465  & -3,465  & -3,465  & -3,465  & -3,465  \\
+		Utilidad neta     &        & -25     & 1,291   & 2,607   & 3,600   & 4,456   \\
+		Inversión propia  & -5,530 &         &         &         &         &         \\
+		Préstamo recibido & 15,000 &         &         &         &         &         \\
+		Valor residual    &        &         &         &         &         & 4,233   \\
+		Flujo de caja     & -5,530 & -25     & 1,291   & 2,607   & 3,923   & 5,239   \\
+		Acumulado         & -5,530 & -5,555  & -4,263  & -1,656  & 2,268   & 7,507   \\
+	\end{tblr}
+\end{table}
+
+\subsection{Indicadores financieros}
+
+La Tabla~\ref{tab:indicadores} resume los principales indicadores de
+rentabilidad del proyecto.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Indicadores de rentabilidad del proyecto.}
+	\label{tab:indicadores}
+	\begin{tblr}{
+			colspec = {X[l] r},
+			row{1} = {font=\bfseries},
+			hlines,
+		}
+		Indicador                                    & Valor        \\
+		TREMA (Tasa de Rendimiento Mínima Aceptable) & 15\%         \\
+		TIR (Tasa Interna de Retorno)                & 25\%         \\
+		VAN (Valor Actual Neto)                      & 7,517.55 USD \\
+		Período de recupero                          & Año 4        \\
+	\end{tblr}
+\end{table}
+
+Con un VAN positivo de \$7,517.55 y una TIR del 25\% ---superior a la
+TREMA del 15\%---, el proyecto resulta \textbf{económicamente viable}.
+
+\section{Análisis de sensibilidad}
+
+Se analizó la sensibilidad del proyecto ante variaciones en las dos
+variables más críticas: cantidad de suscripciones anuales y precio
+de la suscripción mensual.
+
+\subsection{Sensibilidad a cantidad de suscripciones}
+
+La Tabla~\ref{tab:sens-suscripciones} presenta los valores de TIR y VAN
+para diferentes cantidades de suscripciones anuales, manteniendo constantes
+las demás variables del modelo.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Sensibilidad a cantidad de suscripciones anuales.}
+	\label{tab:sens-suscripciones}
+	\begin{tblr}{
+			colspec = {c r r},
+			row{1} = {font=\bfseries},
+			row{6} = {font=\bfseries},
+			hlines,
+		}
+		Suscripciones/año & TIR   & VAN (USD) \\
+		20                & -80\% & -6,373.04 \\
+		22                & -35\% & -2,900.39 \\
+		24                & -11\% & 572.26    \\
+		26                & 8\%   & 4,044.90  \\
+		28 (base)         & 25\%  & 7,517.55  \\
+		30                & 41\%  & 10,990.20 \\
+	\end{tblr}
+\end{table}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+				name=left axis,
+				width=0.8\textwidth,
+				height=6cm,
+				xlabel={Suscripciones anuales},
+				ylabel={VAN (USD)},
+				axis y line*=left,
+				grid=major,
+				xmin=18, xmax=32,
+				ymin=-8000, ymax=12000,
+				xtick={20,22,24,26,28,30},
+				scaled ticks=false,
+				mark size=3pt,
+				legend style={at={(0.02,0.98)}, anchor=north west},
+			]
+			\addplot[blue, thick, mark=*] coordinates {
+					(20, -6373.04)
+					(22, -2900.39)
+					(24, 572.26)
+					(26, 4044.90)
+					(28, 7517.55)
+					(30, 10990.20)
+				};
+			\addplot[gray, dashed, thick] coordinates {(18,0) (32,0)};
+			\legend{VAN, VAN = 0}
+		\end{axis}
+		\begin{axis}[
+				width=0.8\textwidth,
+				height=6cm,
+				axis y line*=right,
+				axis x line=none,
+				ylabel={TIR (\%)},
+				ylabel near ticks,
+				xmin=18, xmax=32,
+				ymin=-100, ymax=50,
+				mark size=3pt,
+				legend style={at={(0.98,0.02)}, anchor=south east},
+			]
+			\addplot[red, thick, mark=square*] coordinates {
+					(20, -80)
+					(22, -35)
+					(24, -11)
+					(26, 8)
+					(28, 25)
+					(30, 41)
+				};
+			\addplot[orange, dashed, thick] coordinates {(18,15) (32,15)};
+			\legend{TIR, TREMA (15\%)}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Sensibilidad del VAN y TIR a la cantidad de suscripciones anuales.}
+	\label{fig:sens-suscripciones}
+\end{figure}
+
+La Figura~\ref{fig:sens-suscripciones} muestra la relación entre la cantidad
+de suscripciones anuales y los indicadores de rentabilidad. Se observa una
+relación lineal entre las variables, donde el punto de equilibrio (VAN = 0)
+se alcanza con aproximadamente \textbf{24 suscripciones anuales}. El proyecto
+supera la TREMA del 15\% a partir de aproximadamente 26 suscripciones anuales.
+
+\subsection{Sensibilidad a precio de suscripción}
+
+La Tabla~\ref{tab:sens-precio} muestra el impacto de variaciones en el
+precio mensual de suscripción sobre los indicadores de rentabilidad del
+proyecto.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Sensibilidad al precio mensual de suscripción.}
+	\label{tab:sens-precio}
+	\begin{tblr}{
+			colspec = {c r r},
+			row{1} = {font=\bfseries},
+			row{6} = {font=\bfseries},
+			hlines,
+		}
+		Precio mensual (USD) & TIR  & VAN (USD) \\
+		30                   & -4\% & 2,406.26  \\
+		35                   & 5\%  & 3,684.09  \\
+		40                   & 12\% & 4,961.91  \\
+		45                   & 19\% & 6,239.73  \\
+		50 (base)            & 25\% & 7,517.55  \\
+		55                   & 30\% & 8,795.37  \\
+	\end{tblr}
+\end{table}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+				name=left axis,
+				width=0.8\textwidth,
+				height=6cm,
+				xlabel={Precio mensual (USD)},
+				ylabel={VAN (USD)},
+				axis y line*=left,
+				grid=major,
+				xmin=25, xmax=60,
+				ymin=0, ymax=10000,
+				xtick={30,35,40,45,50,55},
+				scaled ticks=false,
+				mark size=3pt,
+				legend style={at={(0.02,0.98)}, anchor=north west},
+			]
+			\addplot[blue, thick, mark=*] coordinates {
+					(30, 2406.26)
+					(35, 3684.09)
+					(40, 4961.91)
+					(45, 6239.73)
+					(50, 7517.55)
+					(55, 8795.37)
+				};
+			\legend{VAN}
+		\end{axis}
+		\begin{axis}[
+				width=0.8\textwidth,
+				height=6cm,
+				axis y line*=right,
+				axis x line=none,
+				ylabel={TIR (\%)},
+				ylabel near ticks,
+				xmin=25, xmax=60,
+				ymin=-10, ymax=40,
+				mark size=3pt,
+				legend style={at={(0.98,0.02)}, anchor=south east},
+			]
+			\addplot[red, thick, mark=square*] coordinates {
+					(30, -4)
+					(35, 5)
+					(40, 12)
+					(45, 19)
+					(50, 25)
+					(55, 30)
+				};
+			\addplot[orange, dashed, thick] coordinates {(25,15) (60,15)};
+			\legend{TIR, TREMA (15\%)}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Sensibilidad del VAN y TIR al precio mensual de suscripción.}
+	\label{fig:sens-precio}
+\end{figure}
+
+La Figura~\ref{fig:sens-precio} ilustra cómo varían el VAN y la TIR en función
+del precio mensual de suscripción. Se observa que el proyecto es viable
+(TIR $>$ TREMA) a partir de aproximadamente \$43 USD mensuales. El precio
+mínimo que mantiene el VAN positivo es cercano a \textbf{\$30 USD mensuales},
+aunque la TIR en ese punto sería negativa.
+
+\subsection{Conclusiones del análisis económico}
+
+El análisis demuestra que el emprendimiento es económicamente viable
+bajo los supuestos considerados:
+
+\begin{itemize}
+	\item El proyecto genera un VAN positivo de \$7,517.55 USD con una
+	      TIR del 25\%, superior a la TREMA del 15\%.
+	\item El período de recupero de la inversión es de 4 años.
+	\item El proyecto tiene margen de seguridad, tolerando una reducción
+	      del 14\% en la cantidad de suscripciones (de 28 a 24) antes de
+	      volverse inviable.
+	\item El precio de suscripción puede reducirse hasta \$40 USD mensuales
+	      manteniendo la viabilidad del proyecto.
+\end{itemize}
 
 \end{document}
