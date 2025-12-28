@@ -852,7 +852,7 @@ trabajos futuros.
 	      con baterías es limitada comparada con cámaras trampa comerciales
 	      optimizadas durante años para este propósito. El prototipo utiliza
 	      un módulo \gls{buck-converter} basado en el circuito integrado LM2596,
-	      que permite alimentar el sistema con packs de baterías \gls{18650}
+	      que permite alimentar el sistema con packs de \glspl{18650}
 	      en diversas configuraciones (2S, 3S, 4S), proporcionando flexibilidad
 	      en el voltaje de entrada y permitiendo mayores capacidades de
 	      autonomía.
@@ -1249,7 +1249,7 @@ específicos del nodo. Los requisitos principales del diseño incluyen:
 	\item Protección contra humedad y polvo
 	\item Aperturas dimensionadas para la lente de cámara y sensor PIR
 	\item Espacio para el módulo \gls{buck-converter} y conexión a pack de
-	      baterías \gls{18650} externo
+	      \glspl{18650} externo
 	\item Puntos de montaje para fijación en árboles o postes
 	\item Acceso a la ranura de tarjeta SD sin desmontar el dispositivo
 \end{itemize}
@@ -1529,7 +1529,7 @@ principales:
 	\item[Regulador de voltaje:] Módulo \gls{buck-converter} basado en el
 	      circuito integrado LM2596, que acepta voltajes de entrada entre
 	      4.5V y 40V, permitiendo alimentación desde packs de baterías
-	      \gls{18650} en configuración 2S (7.4V nominal).
+	      \glspl{18650} en configuración 2S (7.4V nominal).
 \end{description}
 
 \subsection{Diseño del firmware}
@@ -1793,7 +1793,7 @@ los siguientes servicios:
 
 \section{Alimentación y consumo energético}
 
-Los nodos de cámara se alimentan mediante packs de baterías \gls{18650}
+Los nodos de cámara se alimentan mediante packs de \glspl{18650}
 en configuración 2S (dos celdas en serie), proporcionando un voltaje
 nominal de 7.4V. El módulo \gls{buck-converter} LM2596 reduce este
 voltaje a 5V para alimentar el ESP32-CAM.
@@ -1828,9 +1828,11 @@ Las pruebas se realizaron utilizando la siguiente configuración de hardware:
 \begin{itemize}
 	\item 3 nodos de cámara (ESP32-CAM con sensor HC-SR501)
 	\item 1 nodo raíz (ESP32 DevKit V1)
-	\item Packs de baterías \gls{18650} en configuración 2S
+	\item Packs de \glspl{18650} en configuración 2S
 	\item Router Wi-Fi doméstico para conexión a internet
-	\item Servidor con procesador multinúcleo y GPU NVIDIA para inferencia
+	\item Servidor local con procesador multinúcleo para inferencia (sin GPU),
+	      accesible mediante túnel VPN (Pangolin, basado en WireGuard) y proxy
+	      reverso (Traefik)
 \end{itemize}
 
 % TODO: Agregar foto del hardware ensamblado
@@ -2348,7 +2350,7 @@ implementaciones:
 	      según la frecuencia esperada de activaciones y la autonomía deseada.
 	      El diseño del prototipo con \gls{buck-converter} permite alimentación
 	      desde un amplio rango de voltajes de entrada (4.5V-40V), facilitando
-	      el uso de packs de baterías \gls{18650} en diversas configuraciones
+	      el uso de packs de \glspl{18650} en diversas configuraciones
 	      (2S, 3S, 4S).
 
 	\item \textbf{Selección del sensor de movimiento:} El sensor \gls{pir}
@@ -2519,7 +2521,7 @@ de cada nodo de cámara.
 			}
 		Componente           & Costo (USD) \\
 		ESP32-CAM            & 9.00        \\
-		Baterías \gls{18650} & 18.00       \\
+		\Glspl{18650}        & 18.00       \\
 		PCB                  & 1.00        \\
 		Sensor PIR           & 1.00        \\
 		Cables               & 1.00        \\
