@@ -160,7 +160,7 @@ económicos y software de \gls{codigo-abierto}.
 
 \section{Estructura del documento}
 
-El presente documento se organiza en diez capítulos que describen de
+El presente documento se organiza en nueve capítulos que describen de
 manera progresiva el desarrollo del sistema propuesto:
 
 \begin{description}
@@ -184,21 +184,19 @@ manera progresiva el desarrollo del sistema propuesto:
 	      y las tecnologías utilizadas.
 
 	\item[Capítulo 6 - Metodología:] Describe el enfoque metodológico,
-	      las etapas de desarrollo y las herramientas empleadas.
+	      las etapas de desarrollo, las herramientas empleadas y las métricas
+	      de evaluación.
 
-	\item[Capítulo 7 - Diseño del Sistema:] Detalla la arquitectura
-	      general, el diseño del hardware, la red \gls{mesh}, el servicio de
-	      detección y el servidor de aplicación.
+	\item[Capítulo 7 - Diseño e Implementación:] Detalla la arquitectura
+	      del sistema, el diseño e implementación de cada componente: nodos
+	      de cámara, nodo raíz, red \gls{mesh}, servicio de detección y
+	      servidor de aplicación.
 
-	\item[Capítulo 8 - Implementación:] Presenta la implementación de
-	      cada componente: nodos \gls{mesh}, nodo raíz, servicio de detección
-	      y servidor de aplicación.
-
-	\item[Capítulo 9 - Pruebas y Resultados:] Documenta las pruebas
+	\item[Capítulo 8 - Pruebas y Resultados:] Documenta las pruebas
 	      realizadas y analiza los resultados obtenidos en conectividad,
 	      detección, rendimiento y consumo energético.
 
-	\item[Capítulo 10 - Conclusiones:] Resume las conclusiones generales,
+	\item[Capítulo 9 - Conclusiones:] Resume las conclusiones generales,
 	      los aportes del trabajo, trabajos futuros y recomendaciones.
 \end{description}
 
@@ -847,8 +845,13 @@ trabajos futuros.
 	\item[Autonomía energética:] Los nodos de cámara \gls{ESP32} presentan un
 	      consumo energético significativo durante la transmisión Wi-Fi. Si
 	      bien se implementan estrategias de ahorro de energía, la autonomía
-	      con baterías convencionales es limitada comparada con cámaras trampa
-	      comerciales optimizadas durante años para este propósito.
+	      con baterías es limitada comparada con cámaras trampa comerciales
+	      optimizadas durante años para este propósito. El prototipo utiliza
+	      un módulo \gls{buck-converter} basado en el circuito integrado LM2596,
+	      que permite alimentar el sistema con packs de baterías \gls{18650}
+	      en diversas configuraciones (2S, 3S, 4S), proporcionando flexibilidad
+	      en el voltaje de entrada y permitiendo mayores capacidades de
+	      autonomía.
 
 	\item[Sensor de movimiento:] Se utiliza un sensor \gls{pir} domótico
 	      convencional, cuyas características de detección están optimizadas
@@ -1193,11 +1196,11 @@ estos componentes determina las capacidades y limitaciones del sistema.
 
 \subsection{Sensores de movimiento PIR}
 
-El \gls{sensor-pir} (\textit{Passive Infrared}) detecta movimiento mediante la
-medición de cambios en los niveles de radiación infrarroja emitida por objetos
-en su campo de visión. El sensor contiene un elemento piroeléctrico dividido
-en dos zonas: cuando un objeto emisor de calor (como un humano o animal) cruza
-de una zona a otra, se genera una diferencia de voltaje que activa la detección.
+El \gls{sensor-pir} detecta movimiento mediante la medición de cambios en los
+niveles de radiación infrarroja emitida por objetos en su campo de visión. El
+sensor contiene un elemento piroeléctrico dividido en dos zonas: cuando un objeto
+emisor de calor (como un humano o animal) cruza de una zona a otra, se genera
+una diferencia de voltaje que activa la detección.
 
 Los sensores PIR domóticos utilizados en este proyecto tienen un rango de
 detección optimizado para objetos del tamaño de humanos, lo que limita la
@@ -1241,7 +1244,8 @@ específicos del nodo. Los requisitos principales del diseño incluyen:
 \begin{itemize}
 	\item Protección contra humedad y polvo
 	\item Aperturas dimensionadas para la lente de cámara y sensor PIR
-	\item Espacio para baterías y circuitos de carga
+	\item Espacio para el módulo \gls{buck-converter} y conexión a pack de
+	      baterías \gls{18650} externo
 	\item Puntos de montaje para fijación en árboles o postes
 	\item Acceso a la ranura de tarjeta SD sin desmontar el dispositivo
 \end{itemize}
@@ -1266,74 +1270,246 @@ fases posteriores de despliegue que requieran operación permanente en exteriore
 
 \section{Enfoque metodológico}
 
+El desarrollo de este proyecto siguió un enfoque \textbf{iterativo e incremental},
+donde cada componente del sistema fue desarrollado, probado y refinado antes de
+avanzar al siguiente. Esta aproximación permitió identificar y corregir problemas
+tempranamente, reduciendo el riesgo de fallas críticas en etapas avanzadas.
+
+Se adoptó la metodología ágil \gls{kanban} para la gestión del proyecto,
+caracterizada por:
+
+\begin{itemize}
+	\item Visualización del flujo de trabajo mediante un tablero con columnas
+	      (Por hacer, En progreso, En revisión, Completado).
+	\item Limitación del trabajo en progreso para mantener el enfoque en tareas
+	      específicas.
+	\item Entrega continua de funcionalidades incrementales.
+	\item Flexibilidad para repriorizar tareas según las necesidades emergentes.
+\end{itemize}
+
+Esta metodología resultó particularmente adecuada para un proyecto que combina
+hardware y software, donde los ciclos de iteración pueden variar significativamente
+entre componentes: el desarrollo de \gls{firmware} requiere ciclos más largos de
+compilación y flasheo, mientras que el desarrollo del servidor permite iteraciones
+más rápidas.
+
 \section{Etapas del desarrollo}
+
+El proyecto se estructuró en las siguientes etapas principales, representadas
+en el diagrama de Gantt de la Figura \ref{fig:gantt-desarrollo}:
+
+\begin{enumerate}
+	\item \textbf{Investigación y diseño:} Revisión del estado del arte, definición
+	      de requisitos y diseño de la arquitectura general del sistema.
+	\item \textbf{Desarrollo del firmware:} Implementación del código para los
+	      nodos \gls{ESP32}, incluyendo captura de imágenes, integración del
+	      sensor \gls{pir} y comunicación \gls{mesh}.
+	\item \textbf{Desarrollo del servidor:} Implementación del backend \gls{django},
+	      integración con \gls{speciesnet} y sistema de notificaciones.
+	\item \textbf{Diseño y fabricación de hardware:} Modelado 3D de la \gls{carcasa}
+	      e impresión de prototipos.
+	\item \textbf{Integración:} Conexión de todos los componentes del sistema y
+	      verificación del flujo completo de datos.
+	\item \textbf{Pruebas y validación:} Evaluación del sistema en condiciones
+	      controladas y de campo.
+\end{enumerate}
+
+% Placeholder para el diagrama de Gantt
+% TODO: Agregar archivo gantt.puml y generar imagen
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=\textwidth]{figures/gantt-desarrollo.png}
+	\fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}
+			[Diagrama de Gantt - Por agregar]
+			\vspace{2cm}}}
+	\caption{Cronograma de desarrollo del proyecto.}
+	\label{fig:gantt-desarrollo}
+\end{figure}
 
 \section{Herramientas y tecnologías utilizadas}
 
+\subsection{Entorno de desarrollo}
+
+\begin{description}
+	\item[Editor de código:] Visual Studio Code con extensiones para desarrollo
+	      en C/C++ (ESP-IDF), Python y Docker.
+	\item[Framework de firmware:] \gls{ESP-IDF} y \gls{ESP-MDF} para el desarrollo
+	      del código de los nodos \gls{ESP32}.
+	\item[Framework web:] \gls{django} para el servidor de aplicación.
+	\item[Bot de notificaciones:] Librería \texttt{python-telegram-bot} para
+	      la implementación del sistema de alertas mediante Telegram.
+	\item[Contenedorización:] \gls{docker} y \gls{docker-compose} para el
+	      despliegue de servicios.
+\end{description}
+
+\subsection{Diseño y fabricación 3D}
+
+\begin{description}
+	\item[Software de modelado:] Autodesk Fusion 360 con licencia educativa para
+	      el diseño de la \gls{carcasa} del nodo.
+	\item[Software de laminado:] PrusaSlicer para la preparación de modelos 3D
+	      y generación de \gls{gcode} para la impresora.
+	\item[Impresora 3D:] Creality Ender 3 con cama caliente, utilizando filamento
+	      \gls{pla} para los prototipos de validación.
+\end{description}
+
+\subsection{Control de versiones y despliegue}
+
+El código fuente del proyecto fue organizado en cuatro repositorios \gls{git} alojados
+en GitHub:
+\begin{enumerate}
+	\item Repositorio del \gls{firmware} para nodos de cámara:\\
+	      \url{https://github.com/fabcontigiani/mesh-node-capstone-project}
+	\item Repositorio del \gls{firmware} para nodo raíz:\\
+	      \url{https://github.com/fabcontigiani/root-node-capstone-project}
+	\item Repositorio del servidor de aplicación:\\
+	      \url{https://github.com/fabcontigiani/server-capstone-project}
+	\item Repositorio del servidor de inferencia y anotación de imágenes:\\
+	      \url{https://github.com/fabcontigiani/wildlife-detection-capstone-project}
+\end{enumerate}
+
+\subsection{Despliegue continuo}
+
+Se implementó una estrategia de \gls{despliegue-continuo} mediante \gls{github-actions}
+para automatizar las siguientes tareas:
+
+\begin{itemize}
+	\item Construcción automática de imágenes \gls{docker} al realizar cambios
+	      en las ramas principales de los repositorios.
+	\item Publicación de las imágenes en el registro de contenedores de GitHub
+	      (GitHub Container Registry).
+\end{itemize}
+
+Esta automatización garantizó que las versiones desplegadas del servidor
+siempre correspondieran al código más reciente validado, reduciendo errores
+humanos en el proceso de despliegue.
+
 \section{Métricas de evaluación}
 
+Para validar el cumplimiento de los objetivos del proyecto, se definieron las
+siguientes métricas de evaluación:
+
+\subsection{Métricas de rendimiento de red}
+
+\begin{description}
+	\item[Latencia de transmisión:] Tiempo transcurrido desde la captura de una
+	      imagen en el nodo hasta su recepción completa en el servidor. Se mide
+	      en segundos y representa la capacidad del sistema para proporcionar
+	      información en tiempos operativamente útiles.
+	\item[Distancia máxima entre nodos:] Distancia física máxima a la cual dos
+	      nodos pueden mantener una conexión \gls{mesh} funcional, medida en
+	      metros. Esta métrica determina la densidad de nodos necesaria para
+	      cubrir un área determinada.
+	\item[Estabilidad de la red:] Tasa de pérdida de paquetes y frecuencia de
+	      reconexiones durante operación prolongada. Una red estable debe
+	      mantener tasas de pérdida inferiores al 5\%.
+\end{description}
+
+\subsection{Métricas de clasificación}
+
+\begin{description}
+	\item[Precisión de detección:] Proporción de imágenes correctamente
+	      clasificadas como conteniendo animales, personas, vehículos o
+	      imágenes vacías.
+	\item[Precisión de clasificación taxonómica:] Para las imágenes con animales,
+	      proporción de especies correctamente identificadas a nivel de familia
+	      o género.
+\end{description}
+
+\subsection{Métricas de consumo energético}
+
+\begin{description}
+	\item[Consumo promedio del nodo:] Consumo eléctrico promedio del nodo de
+	      cámara durante un ciclo típico de operación (espera + captura +
+	      transmisión), medido en miliamperios (mA).
+	\item[Autonomía estimada:] Tiempo de operación estimado con una batería de
+	      capacidad conocida, calculado a partir del consumo promedio.
+\end{description}
+
+\section{Estrategia de pruebas}
+
+\subsection{Pruebas incrementales de firmware}
+
+Durante el desarrollo del \gls{firmware}, cada módulo fue probado de forma
+aislada antes de su integración:
+
+\begin{itemize}
+	\item Pruebas de captura de imagen con el módulo OV2640
+	\item Pruebas de detección del sensor \gls{pir}
+	\item Pruebas de conexión y transmisión \gls{mesh} entre nodos
+	\item Pruebas de consumo energético
+\end{itemize}
+
+\subsection{Pruebas de integración}
+
+Una vez validados los componentes individuales, se realizaron pruebas de
+integración verificando:
+
+\begin{itemize}
+	\item Transmisión de imágenes desde nodos de cámara hasta el servidor
+	\item Procesamiento de imágenes por el modelo de \gls{ia}
+	\item Generación de notificaciones mediante el bot de \gls{telegram-bot}
+\end{itemize}
+
+\subsection{Pruebas de sistema}
+
+Las pruebas del sistema completo se realizaron en dos fases:
+
+\begin{description}
+	\item[Fase 1 - Pruebas de laboratorio:] Validación del funcionamiento del
+	      sistema en condiciones controladas de interior, verificando la
+	      correcta integración de todos los componentes y midiendo las métricas
+	      de rendimiento base.
+	\item[Fase 2 - Pruebas de campo:] Instalación del sistema en un entorno
+	      exterior bajo condiciones climáticas favorables. Durante varias horas
+	      se monitoreó el funcionamiento del sistema, registrando las métricas
+	      de latencia, estabilidad de red, consumo energético y precisión de
+	      clasificación en condiciones realistas.
+\end{description}
+
 % ==============================================================================
-% Capítulo 7: Diseño del Sistema
+% Capítulo 7: Diseño e Implementación del Sistema
 % ==============================================================================
-\chapter{Diseño del Sistema}
+\chapter{Diseño e Implementación del Sistema}
 
 \section{Arquitectura general}
 
-\section{Diseño del hardware}
+\section{Nodo de cámara (mesh-node)}
 \subsection{Selección de componentes}
-\subsection{Nodo de captura con cámara}
-\subsection{Sensor de movimiento PIR}
-\subsection{Carcasa para impresión 3D}
-\subsection{Nodo raíz}
-\subsection{Alimentación y consumo energético}
-
-\section{Diseño de la red mesh}
-\subsection{Topología de la red}
-\subsection{Protocolo de comunicación}
-\subsection{Formato de datos}
-
-\section{Diseño del servicio de detección}
-\subsection{Servidor de inferencia con SpeciesNet}
-\subsection{Detección de animales, humanos y vehículos}
-\subsection{Anotación de imágenes con bounding boxes}
-
-\section{Diseño del servidor de aplicación}
-\subsection{Arquitectura de servicios}
-\subsection{Gestión de imágenes}
-\subsection{Interfaz web}
-\subsection{Bot de Telegram y sistema de alertas}
-
-% ==============================================================================
-% Capítulo 8: Implementación
-% ==============================================================================
-\chapter{Implementación}
-
-\section{Nodo mesh (mesh-node)}
-\subsection{Firmware del nodo de captura}
-\subsection{Integración del sensor PIR}
+\subsection{Diseño del firmware}
 \subsection{Captura de imágenes}
+\subsection{Integración del sensor PIR}
 \subsection{Compresión y transmisión}
-\subsection{Fabricación de la carcasa 3D}
+\subsection{Carcasa para impresión 3D}
 
 \section{Nodo raíz (root-node)}
+\subsection{Diseño del hardware}
 \subsection{Firmware del nodo raíz}
 \subsection{Conexión con servidor TCP}
 \subsection{Gestión de la red mesh}
 
+\section{Red mesh}
+\subsection{Topología de la red}
+\subsection{Protocolo de comunicación}
+\subsection{Formato de datos}
+
 \section{Servicio de detección (wildlife-detection)}
+\subsection{Arquitectura del servicio}
 \subsection{Contenedor Docker con SpeciesNet}
-\subsection{API de inferencia con LitServe}
-\subsection{Procesamiento de imágenes}
+\subsection{API de inferencia}
+\subsection{Detección y clasificación}
 
 \section{Servidor de aplicación (server)}
-\subsection{Aplicación Django}
-\subsection{Integración con SpeciesNet}
+\subsection{Arquitectura Django}
+\subsection{Gestión de imágenes}
 \subsection{Bot de Telegram y sistema de alertas}
 \subsection{Base de datos PostgreSQL}
 \subsection{Despliegue con Docker Compose}
 
+\section{Alimentación y consumo energético}
+
 % ==============================================================================
-% Capítulo 9: Pruebas y Resultados
+% Capítulo 8: Pruebas y Resultados
 % ==============================================================================
 \chapter{Pruebas y Resultados}
 
@@ -1361,7 +1537,7 @@ fases posteriores de despliegue que requieran operación permanente en exteriore
 \section{Análisis de resultados}
 
 % ==============================================================================
-% Capítulo 10: Conclusiones
+% Capítulo 9: Conclusiones
 % ==============================================================================
 \chapter{Conclusiones}
 
