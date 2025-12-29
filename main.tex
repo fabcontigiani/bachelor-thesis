@@ -2649,8 +2649,74 @@ guardarla en la tarjeta SD y transmitirla a través de la red mesh.
 \lstinputlisting[firstline=419, lastline=483, firstnumber=419, caption={Función de captura y envío de imágenes.}, label=lst:capture-photo]{src/mesh-node-capstone-project/main/mesh_node.c}
 
 \section{Firmware del nodo raíz}
+
+El nodo raíz actúa como puerta de enlace entre la red mesh y el servidor remoto.
+Su firmware (\texttt{root\_node.c}) implementa la recepción de imágenes desde
+los nodos de cámara y su transmisión al servidor mediante HTTP POST.
+
+El código~\ref{lst:root-app-main} muestra la función \texttt{app\_main()} del
+nodo raíz, que configura la red mesh en modo raíz fijo e inicializa las tareas
+de recepción y transmisión de datos.
+
+\lstinputlisting[firstline=457, lastline=521, firstnumber=457, caption={Función principal \texttt{app\_main()} del nodo raíz.}, label=lst:root-app-main]{src/root-node-capstone-project/main/root_node.c}
+
+El código~\ref{lst:root-task} presenta la función \texttt{root\_task()}, que
+implementa el bucle principal de recepción de datos desde la red mesh. Esta
+tarea espera hasta que el nodo se establezca como raíz, luego recibe datos
+de los nodos hijos mediante \texttt{mwifi\_root\_read()} y los encola para
+su transmisión HTTP.
+
+\lstinputlisting[firstline=215, lastline=336, firstnumber=215, caption={Tarea de recepción de datos de la red mesh.}, label=lst:root-task]{src/root-node-capstone-project/main/root_node.c}
+
+El código~\ref{lst:http-post-task} muestra la tarea \texttt{http\_post\_task()},
+responsable de enviar las imágenes recibidas al servidor Django mediante
+solicitudes HTTP POST con formato multipart. La tarea construye el cuerpo de la
+solicitud incluyendo la dirección MAC del nodo origen y los datos de la imagen.
+
+\lstinputlisting[firstline=41, lastline=205, firstnumber=41, caption={Tarea de envío HTTP al servidor.}, label=lst:http-post-task]{src/root-node-capstone-project/main/root_node.c}
+
 \section{Servidor de detección}
+
+El servidor de detección implementa una versión extendida del API de \gls{speciesnet}
+que, además de realizar la \gls{inferencia}, dibuja los cuadros delimitadores
+sobre las detecciones y guarda las imágenes anotadas. El código está contenido
+en \texttt{main.py} del repositorio \texttt{wildlife-detection-capstone-project}.
+
+El código~\ref{lst:save-annotated} presenta la función \texttt{save\_annotated\_image()},
+que utiliza la biblioteca PIL para dibujar los cuadros delimitadores sobre la
+imagen original y guardarla con el sufijo \texttt{\_annotated}.
+
+\lstinputlisting[language=Python, firstline=85, lastline=114, firstnumber=85, caption={Función para guardar imágenes anotadas con detecciones.}, label=lst:save-annotated]{src/wildlife-detection-capstone-project/main.py}
+
+El código~\ref{lst:annotating-api} muestra la clase \texttt{AnnotatingSpeciesNetAPI},
+que extiende el servidor estándar de \gls{speciesnet} para incluir la funcionalidad
+de anotación de imágenes. El método \texttt{predict()} procesa las imágenes,
+ejecuta la \gls{inferencia} y opcionalmente guarda las versiones anotadas.
+
+\lstinputlisting[language=Python, firstline=117, lastline=196, firstnumber=117, caption={Clase del servidor de \gls{inferencia} con anotación de imágenes.}, label=lst:annotating-api]{src/wildlife-detection-capstone-project/main.py}
+
 \section{Aplicación Django}
+
+La aplicación Django coordina el procesamiento de imágenes y el envío de
+notificaciones. El módulo \texttt{service.py} contiene la lógica de
+orquestación entre la recepción de imágenes, el servicio de \gls{inferencia}
+y el sistema de alertas.
+
+El código~\ref{lst:process-image} muestra la función \texttt{process\_image()},
+que envía la imagen al servidor \gls{speciesnet}, procesa los resultados de
+la \gls{inferencia}, guarda los metadatos de clasificación y dispara el envío
+de notificaciones a través de Telegram.
+
+\lstinputlisting[language=Python, firstline=62, lastline=107, firstnumber=62, caption={Función de procesamiento de imágenes.}, label=lst:process-image]{src/server-capstone-project/monitor/service.py}
+
+El código~\ref{lst:telegram-notification} presenta la función
+\texttt{send\_telegram\_notification()}, que lee los datos de la imagen
+procesada y los transmite a todos los usuarios de Telegram registrados
+en el sistema. La función envía tanto la imagen original como la versión
+anotada con las detecciones, junto con un reporte de texto formateado
+con los resultados de la clasificación.
+
+\lstinputlisting[language=Python, firstline=53, lastline=93, firstnumber=53, caption={Función de envío de notificaciones por Telegram.}, label=lst:telegram-notification]{src/server-capstone-project/telegram_bot/sender.py}
 
 \chapter{Manual de instalación y uso}
 
