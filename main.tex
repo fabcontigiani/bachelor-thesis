@@ -1630,17 +1630,26 @@ El componente \gls{mwifi} proporciona:
 
 \subsection{Carcasa para impresión 3D}
 
-La carcasa del nodo fue diseñada en Autodesk Fusion 360 e impresa en
-\gls{pla}. El diseño contempla:
+El diseño de la carcasa se basó en un modelo público bajo licencia
+Creative Commons 4.0 International, disponible en
+Printables\footnote{\url{www.printables.com/model/520378-case-for-esp32_cam-trail-camera-pir-sensor-18650-b}},
+el cual fue modificado utilizando Autodesk Fusion 360 para adaptarlo a los
+requerimientos específicos del proyecto. La carcasa fue impresa en \gls{pla}
+y contempla:
 
 \begin{itemize}
 	\item Apertura frontal para la lente de la cámara
 	\item Apertura superior para el domo del sensor PIR
-	\item Espacio interno para el módulo \gls{buck-converter}
+	\item Espacio interno para el módulo \gls{buck-converter} basado en LM2596
 	\item Orificio para cable de alimentación hacia pack de baterías externo
+	\item Provisión para conexión de antena externa
 	\item Ranura de acceso a la tarjeta microSD
 	\item Puntos de montaje para fijación en superficies
 \end{itemize}
+
+El plano 2D del diseño final se incluye en el Anexo~\ref{anexo:planos-carcasa}
+(Figura~\ref{fig:plano-carcasa} y Figura~\ref{fig:plano-base}). El modelo 3D
+modificado está disponible públicamente en Printables\footnote{\url{www.printables.com/model/1532349-case-for-esp32_cam-trail-camera-pir-sensor-buck-co}}.
 
 \section{Nodo raíz (root-node)}
 
@@ -2414,6 +2423,23 @@ implementaciones:
 
 \chapter{Esquemáticos del hardware}
 
+\chapter{Planos de la carcasa}
+\label{anexo:planos-carcasa}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=0.85\textheight]{img/ESP3-CAM Drawing Main Case.pdf}
+	\caption{Plano 2D de la carcasa principal del nodo de cámara.}
+	\label{fig:plano-carcasa}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=0.85\textheight]{img/ESP3-CAM Drawing Base.pdf}
+	\caption{Plano 2D de la base del nodo de cámara.}
+	\label{fig:plano-base}
+\end{figure}
+
 \chapter{Código fuente relevante}
 
 \section{Firmware del nodo mesh}
@@ -2436,10 +2462,247 @@ guardarla en la tarjeta SD y transmitirla a través de la red mesh.
 \section{Aplicación Django}
 
 \chapter{Manual de instalación y uso}
+
+Este capítulo presenta las instrucciones detalladas para la configuración e
+instalación del sistema completo, incluyendo el firmware de los nodos, el
+servidor de aplicación y el bot de Telegram.
+
 \section{Configuración del firmware}
+
+La configuración del firmware para los nodos mesh y el nodo raíz se realiza
+mediante el menú de configuración de ESP-IDF. Los parámetros principales
+se encuentran bajo el submenú ``Example Configuration'' accesible mediante
+el comando \texttt{idf.py menuconfig}.
+
+\subsection{Parámetros de la red Wi-Fi}
+
+Los siguientes parámetros deben configurarse para conectar la red mesh a
+un router externo que proporcione acceso a Internet:
+
+\begin{description}
+	\item[Router SSID:] Nombre de la red Wi-Fi del router.
+	\item[Router Password:] Contraseña de la red Wi-Fi.
+	\item[Router Channel:] Canal de operación del router. Si se desconoce,
+	      configurar como 0 para detección automática.
+\end{description}
+
+\subsection{Parámetros de la red ESP-MESH}
+
+La red mesh se configura mediante los siguientes parámetros:
+
+\begin{description}
+	\item[Mesh ID:] Identificador único de la red mesh (6 bytes).
+	\item[Mesh Password:] Contraseña de la red mesh (entre 8 y 64 caracteres).
+	      Si se deja en blanco, la red no estará encriptada.
+	\item[Max Connections:] Número máximo de conexiones que puede aceptar
+	      cada nodo (por defecto, 6).
+\end{description}
+
+\subsection{Parámetros del servidor TCP}
+
+Para que el nodo raíz pueda conectarse al servidor de aplicación, se
+deben configurar:
+
+\begin{description}
+	\item[Server IP:] Dirección IP del servidor donde se ejecuta la
+	      aplicación Django.
+	\item[Server Port:] Puerto TCP del servidor (por defecto, 8001).
+\end{description}
+
+\subsection{Compilación y grabación}
+
+Una vez configurados los parámetros, el firmware se compila y graba
+utilizando los siguientes comandos:
+
+\begin{lstlisting}[language=bash, caption={Comandos para compilar y grabar el firmware.}]
+# Borrar flash y grabar firmware
+idf.py erase_flash flash monitor -b 921600 -p /dev/ttyUSB0
+\end{lstlisting}
+
+Es recomendable grabar primero el nodo raíz y verificar su conexión al
+router antes de grabar los nodos de cámara.
+
 \section{Despliegue del servidor}
+
+El servidor de aplicación se despliega utilizando \gls{docker} y
+Docker Compose, lo que simplifica la gestión de dependencias y la
+configuración del entorno.
+
+\subsection{Prerrequisitos}
+
+\begin{itemize}
+	\item Docker y Docker Compose instalados en el servidor.
+	\item Token del bot de Telegram (obtenido de @BotFather).
+	\item Opcional: GPU NVIDIA con nvidia-container-toolkit para
+	      acelerar la inferencia.
+\end{itemize}
+
+\subsection{Configuración del entorno}
+
+\begin{enumerate}
+	\item Clonar el repositorio del servidor.
+	\item Copiar el archivo de configuración de ejemplo:
+	      \lstinline[language=bash]{cp .env.sample .env}
+	\item Editar el archivo \texttt{.env} con los valores apropiados.
+\end{enumerate}
+
+Las variables de entorno principales son:
+
+\begin{description}
+	\item[DJANGO\_SECRET\_KEY:] Clave secreta de Django para producción.
+	\item[POSTGRES\_DB, POSTGRES\_USER, POSTGRES\_PASSWORD:] Credenciales
+	      de la base de datos PostgreSQL.
+	\item[TELEGRAM\_BOT\_TOKEN:] Token del bot de Telegram (requerido).
+	\item[GUNICORN\_WORKERS:] Número de workers de Gunicorn (por defecto, 2).
+\end{description}
+
+\subsection{Inicio de los servicios}
+
+El sistema completo se inicia con un único comando:
+
+\begin{lstlisting}[language=bash, caption={Inicio de los servicios con Docker Compose.}]
+docker compose up --build
+\end{lstlisting}
+
+Este comando inicia cuatro servicios:
+
+\begin{description}
+	\item[web:] Servidor de aplicación Django (puerto 8000).
+	\item[bot:] Bot de Telegram para notificaciones.
+	\item[speciesnet:] Servicio de inferencia de \gls{speciesnet}
+	      (puerto 8002).
+	\item[db:] Base de datos PostgreSQL.
+\end{description}
+
+\textbf{Nota:} La primera ejecución puede tardar entre 5 y 10 minutos
+mientras se descarga el modelo de \gls{speciesnet} ($\sim$2~GB). Las
+ejecuciones posteriores son significativamente más rápidas gracias al
+caché del modelo en un volumen de Docker.
+
+\subsection{Aceleración por GPU}
+
+Para habilitar la aceleración por GPU en el servicio de \gls{speciesnet}:
+
+\begin{enumerate}
+	\item Instalar nvidia-container-toolkit en el servidor.
+	\item Descomentar la sección \texttt{deploy} del servicio
+	      \texttt{speciesnet} en \texttt{docker-compose.yml}.
+	\item Reiniciar los servicios.
+\end{enumerate}
+
+Con GPU, el tiempo de inferencia se reduce de 1--5 segundos por imagen
+(CPU) a 0.5--1 segundo (GPU).
+
 \section{Configuración del bot de Telegram}
+
+El bot de Telegram permite recibir notificaciones en tiempo real y
+consultar las últimas imágenes procesadas desde cualquier dispositivo
+móvil.
+
+\subsection{Creación del bot}
+
+\begin{enumerate}
+	\item Abrir Telegram y buscar @BotFather.
+	\item Enviar el comando \texttt{/newbot} y seguir las instrucciones.
+	\item Copiar el token proporcionado por BotFather.
+	\item Configurar el token en la variable \texttt{TELEGRAM\_BOT\_TOKEN}
+	      del archivo \texttt{.env}.
+\end{enumerate}
+
+\subsection{Registro de usuarios}
+
+Para recibir notificaciones, los usuarios deben registrarse enviando
+el comando \texttt{/start} al bot. Esto crea un registro en la base
+de datos que asocia el ID de Telegram del usuario con el sistema.
+
+\subsection{Comandos disponibles}
+
+El bot soporta los siguientes comandos:
+
+\begin{description}
+	\item[/start:] Registra al usuario y muestra el mensaje de bienvenida.
+	\item[/last:] Recupera la última imagen procesada, mostrando:
+	      \begin{itemize}
+		      \item Fotografía original.
+		      \item Fotografía procesada con cuadros delimitadores.
+		      \item Lista de detecciones con niveles de confianza.
+		      \item Top 5 de clasificaciones de especies.
+	      \end{itemize}
+\end{description}
+
 \section{Uso del sistema}
+
+Una vez desplegado el sistema, el flujo de operación es completamente
+automático. A continuación se describen las distintas formas de
+interactuar con el sistema.
+
+\subsection{Interfaz web}
+
+La interfaz web está disponible en \texttt{http://<servidor>:8000} y
+permite:
+
+\begin{enumerate}
+	\item Visualizar las imágenes recibidas de los nodos.
+	\item Ver los resultados de la detección y clasificación.
+	\item Acceder a las imágenes anotadas con cuadros delimitadores.
+\end{enumerate}
+
+\subsection{Notificaciones automáticas}
+
+Cuando un nodo de cámara detecta movimiento y captura una imagen:
+
+\begin{enumerate}
+	\item La imagen se transmite a través de la red mesh hasta el
+	      nodo raíz.
+	\item El nodo raíz reenvía la imagen al servidor vía TCP.
+	\item El servidor procesa la imagen con \gls{speciesnet}.
+	\item Si se detectan animales, personas o vehículos, se envía
+	      una notificación a todos los usuarios registrados en
+	      Telegram.
+\end{enumerate}
+
+\subsection{Consultas bajo demanda}
+
+Los usuarios pueden consultar el estado del sistema en cualquier
+momento utilizando el comando \texttt{/last} del bot de Telegram,
+que devuelve la última imagen procesada junto con su análisis.
+
+\subsection{Acceso directo a la API}
+
+Para integraciones avanzadas, es posible realizar consultas directas
+al servicio de \gls{speciesnet}:
+
+\begin{lstlisting}[language=bash, caption={Ejemplo de consulta directa a la API de SpeciesNet.}]
+curl -X POST http://localhost:8002/predict \
+  -H "Content-Type: application/json" \
+  -d '{"instances": [{"filepath": "/app/media/images/foto.jpg"}]}'
+\end{lstlisting}
+
+La respuesta incluye:
+
+\begin{description}
+	\item[detections:] Lista de objetos detectados con etiquetas
+	      (animal/humano/vehículo) y niveles de confianza.
+	\item[classifications:] Predicciones de especies con niveles
+	      de confianza.
+	\item[annotated\_filepath:] Ruta a la imagen anotada con
+	      cuadros delimitadores.
+\end{description}
+
+\subsection{Solución de problemas comunes}
+
+\begin{description}
+	\item[SpeciesNet no responde:] Verificar el estado del contenedor
+	      con \lstinline[language=bash]{docker compose logs speciesnet}.
+	      La descarga del modelo puede tardar varios minutos en la primera
+	      ejecución.
+	\item[Bot de Telegram sin respuesta:] Verificar que el token
+	      esté configurado correctamente en \texttt{.env} y revisar
+	      los logs con \lstinline[language=bash]{docker compose logs bot}.
+	\item[Imágenes no procesadas:] Verificar que todos los servicios
+	      estén en ejecución con \lstinline[language=bash]{docker compose ps}
+	      y revisar los logs del servicio web.
+\end{description}
 
 \chapter{Análisis de viabilidad económica}
 
