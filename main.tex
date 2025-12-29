@@ -954,6 +954,190 @@ de varios órdenes de magnitud que habilita respuestas operativas antes imposibl
 % ==============================================================================
 \chapter{Marco Teórico}
 
+\section{Cámaras Trampa}
+
+Las \glspl{camara-trampa} constituyen una de las herramientas más valiosas para
+el estudio de la fauna silvestre en entornos naturales. Estos dispositivos,
+diseñados para capturar imágenes de manera automática cuando detectan movimiento
+o calor, permiten documentar la presencia y comportamiento de animales sin
+requerir la presencia continua de investigadores, minimizando así la
+perturbación del ecosistema \cite{steenweg2017scaling}.
+
+\subsection{Evolución histórica}
+
+El concepto de fotografía automática de fauna tiene sus orígenes a finales del
+siglo XIX, cuando el naturalista George Shiras III desarrolló las primeras
+técnicas de fotografía nocturna con disparador por cable. Sin embargo, las
+cámaras trampa modernas surgieron en la década de 1990 con la miniaturización
+de componentes electrónicos y el desarrollo de sensores de movimiento de bajo
+consumo \cite{kucera2011century}.
+
+La evolución tecnológica ha atravesado varias etapas significativas:
+\begin{itemize}
+	\item \textbf{Era analógica (1990-2000):} Primeras cámaras comerciales con
+	      película fotográfica y sensores \gls{pir} básicos.
+	\item \textbf{Digitalización (2000-2010):} Transición a sensores digitales
+	      \gls{cmos} y almacenamiento en tarjetas de memoria.
+	\item \textbf{Alta definición (2010-2020):} Mejoras en resolución, capacidad
+	      de video HD, y reducción significativa de costos.
+	\item \textbf{Conectividad (2020-presente):} Incorporación de módulos
+	      celulares, Wi-Fi y satelitales para transmisión remota de datos.
+\end{itemize}
+
+Esta evolución ha democratizado el acceso a la tecnología, pasando de equipos
+de alto costo utilizados exclusivamente en investigación científica a
+dispositivos accesibles para proyectos de conservación con recursos limitados.
+
+\subsection{Componentes principales}
+
+Una cámara trampa moderna está compuesta por varios elementos integrados que
+trabajan en conjunto para detectar, capturar y almacenar imágenes de fauna:
+
+\begin{description}
+	\item[Sensor de movimiento:] Típicamente un sensor \gls{pir} que detecta
+	      cambios en la radiación infrarroja emitida por cuerpos calientes en
+	      movimiento. El sensor tiene un campo de detección definido por su
+	      ángulo y alcance, generalmente entre 10 y 20 metros.
+	\item[Módulo de cámara:] Sensor de imagen \gls{cmos} con resoluciones que
+	      varían desde 5 hasta 48 megapíxeles en modelos actuales. La calidad
+	      del lente y el tamaño del sensor influyen directamente en la nitidez
+	      de las imágenes, especialmente en condiciones de baja luminosidad.
+	\item[Sistema de iluminación:] Para capturas nocturnas, las cámaras incluyen
+	      LEDs \gls{ir} o flash blanco. Los LEDs infrarrojos (850nm o 940nm)
+	      permiten capturas sin alertar a los animales, aunque con menor calidad
+	      de color que el flash blanco.
+	\item[Almacenamiento:] Tarjetas de memoria SD o microSD, con capacidades
+	      típicas de 32 a 512 GB, permitiendo almacenar miles de imágenes o
+	      cientos de horas de video antes de requerir descarga.
+	\item[Alimentación:] Baterías AA, baterías de litio recargables, o paneles
+	      solares auxiliares. La autonomía depende de la frecuencia de
+	      activaciones y puede variar de semanas a varios meses.
+	\item[Carcasa protectora:] Gabinete resistente a la intemperie, generalmente
+	      con clasificación IP65 o superior, que protege los componentes
+	      electrónicos de lluvia, polvo e impactos.
+\end{description}
+
+\subsection{Funcionamiento técnico}
+
+El ciclo de operación de una cámara trampa sigue una secuencia bien definida
+que optimiza el consumo energético mientras maximiza la probabilidad de
+captura:
+
+\begin{enumerate}
+	\item \textbf{Modo de reposo:} La cámara permanece en estado de bajo consumo,
+	      con solo el sensor \gls{pir} activo monitoreando cambios térmicos en
+	      su campo de visión.
+	\item \textbf{Detección:} Cuando el sensor detecta un cambio significativo
+	      en la radiación infrarroja ---indicativo de un cuerpo caliente en
+	      movimiento---, genera una señal de activación.
+	\item \textbf{Activación:} El microprocesador despierta el sistema de cámara,
+	      proceso que introduce una latencia conocida como \textit{trigger time}
+	      o tiempo de disparo, que varía entre 0.1 y 2 segundos según el modelo.
+	\item \textbf{Captura:} Se toman una o más fotografías (ráfaga), o se inicia
+	      una grabación de video de duración configurable.
+	\item \textbf{Almacenamiento:} Las imágenes se comprimen (generalmente en
+	      formato \gls{jpeg}) y se graban en la tarjeta de memoria junto con
+	      metadatos como fecha, hora, temperatura y fase lunar.
+	\item \textbf{Retorno al reposo:} Tras un período de recuperación configurable
+	      (para evitar múltiples disparos del mismo evento), la cámara vuelve
+	      al modo de bajo consumo.
+\end{enumerate}
+
+La efectividad de la captura depende de parámetros configurables como el
+ángulo del sensor, la sensibilidad de detección, el tiempo de disparo, y el
+intervalo mínimo entre capturas consecutivas.
+
+\subsection{Tipos y clasificación}
+
+Las cámaras trampa pueden clasificarse según diferentes criterios técnicos:
+
+\textbf{Por tipo de sensor de activación:}
+\begin{description}
+	\item[Pasivas (PIR):] Utilizan sensores infrarrojos pasivos que detectan
+	      el calor emitido por animales. Son las más comunes por su bajo
+	      consumo y costo, pero pueden fallar con animales de sangre fría
+	      o en días muy calurosos cuando la diferencia térmica es mínima.
+	\item[Activas (haz infrarrojo):] Emplean un emisor y receptor de haz
+	      infrarrojo; la captura se dispara cuando el animal interrumpe el
+	      haz. Ofrecen mayor precisión posicional pero requieren instalación
+	      más compleja con componentes separados.
+\end{description}
+
+\textbf{Por tipo de iluminación nocturna:}
+\begin{description}
+	\item[Flash blanco:] Proporciona imágenes a color de alta calidad incluso
+	      de noche, pero puede alertar o espantar a algunos animales.
+	\item[LED infrarrojo visible (850nm):] Emite un tenue resplandor rojo
+	      visible para algunos animales, pero menos intrusivo que el flash
+	      blanco.
+	\item[LED infrarrojo invisible (940nm, ``no-glow''):] Completamente invisible
+	      para humanos y la mayoría de los animales, aunque produce imágenes
+	      de menor contraste y alcance reducido.
+\end{description}
+
+\textbf{Por conectividad:}
+\begin{description}
+	\item[Autónomas:] Almacenan datos localmente, requiriendo visitas físicas
+	      para recuperar las imágenes.
+	\item[Celulares:] Transmiten imágenes mediante redes 3G/4G/5G a servidores
+	      remotos o aplicaciones móviles.
+	\item[Wi-Fi:] Permiten descarga inalámbrica cuando el usuario se encuentra
+	      en rango cercano.
+	\item[Satelitales:] Utilizan redes como Iridium o Globalstar para transmisión
+	      desde ubicaciones sin cobertura celular, con costos operativos elevados.
+\end{description}
+
+\subsection{Aplicaciones en conservación}
+
+Las cámaras trampa se han convertido en herramientas indispensables para
+múltiples aspectos de la investigación y gestión de fauna silvestre:
+
+\begin{description}
+	\item[Inventarios de biodiversidad:] Permiten documentar la riqueza de
+	      especies en un área protegida, incluyendo especies esquivas, nocturnas
+	      o de baja densidad que serían difíciles de detectar mediante
+	      observación directa.
+	\item[Monitoreo poblacional:] Mediante la identificación de individuos por
+	      patrones naturales (manchas, rayas, cicatrices), es posible estimar
+	      abundancia poblacional utilizando modelos de captura-recaptura
+	      \cite{dibitetti2003yaguarete}.
+	\item[Estudios de comportamiento:] La operación continua 24/7 permite
+	      documentar patrones de actividad, uso de hábitat, interacciones
+	      entre especies y comportamiento reproductivo.
+	\item[Detección de amenazas:] Las cámaras pueden registrar evidencia de
+	      actividades de \gls{caza-furtiva}, tala ilegal, o intrusión humana
+	      en áreas protegidas, aunque con la limitación de que la información
+	      solo está disponible al recuperar físicamente los dispositivos.
+\end{description}
+
+\subsection{Limitaciones técnicas}
+
+A pesar de su utilidad, las cámaras trampa convencionales presentan
+limitaciones que motivan el desarrollo de sistemas más avanzados:
+
+\begin{description}
+	\item[Latencia de información:] Las imágenes permanecen almacenadas
+	      localmente hasta que un investigador visita el sitio, introduciendo
+	      demoras de semanas o meses entre la captura y el análisis.
+	\item[Falsas activaciones:] Movimiento de vegetación por viento, cambios
+	      bruscos de temperatura, o pequeños animales no objetivo generan
+	      un alto porcentaje de imágenes vacías o irrelevantes, que en algunos
+	      estudios supera el 80\% del total capturado.
+	\item[Volumen de datos:] Proyectos con múltiples cámaras generan miles
+	      o millones de imágenes que requieren clasificación manual, proceso
+	      que consume cientos de horas-hombre.
+	\item[Mantenimiento de campo:] Las visitas periódicas para cambio de
+	      baterías y tarjetas de memoria implican costos logísticos y
+	      potencial perturbación del sitio de monitoreo.
+	\item[Zona de detección fija:] El campo de visión del sensor \gls{pir}
+	      limita el área efectiva de monitoreo, requiriendo múltiples
+	      unidades para cubrir extensiones significativas.
+\end{description}
+
+Estas limitaciones fundamentan la necesidad de integrar las cámaras trampa
+con tecnologías de comunicación inalámbrica e inteligencia artificial, tal
+como propone el presente trabajo.
+
 \section{Internet de las Cosas (IoT)}
 
 El \gls{iot} representa un paradigma de conectividad donde objetos físicos
