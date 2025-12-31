@@ -1,0 +1,4 @@
+SpeciesNet
+mesh
+Mwifi
+MegaDetector
