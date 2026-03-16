@@ -87,10 +87,11 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 	para la detección automática de fauna silvestre, personas y vehículos.
 
 	El sistema está compuesto por una red de \glspl{nodo} de captura basados en
-	microcontroladores \gls{ESP32} equipados con cámaras, los cuales se comunican
-	mediante el protocolo \gls{ESP-MESH} para transmitir imágenes hacia un
-	\gls{nodo-raiz}. Este nodo actúa como puerta de enlace, reenviando las imágenes
-	a un servidor remoto a través de \gls{tcp}/IP.
+    microcontroladores \gls{ESP32} equipados con cámaras, los cuales se comunican
+    mediante el protocolo \gls{ESP-MESH-LITE} para transmitir imágenes hacia un
+    \gls{nodo-raiz}. Este nodo actúa como puerta de enlace, proporcionando acceso
+    a la red externa a través de la cual las imágenes son enviadas al servidor
+    remoto mediante peticiones HTTP.
 
 	En el servidor, las imágenes son procesadas por un servicio de
 	\gls{inferencia} basado en \gls{speciesnet}, un modelo de detección de objetos
@@ -100,7 +101,7 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 	ante posibles intrusiones.
 
 	La arquitectura del servidor incluye una aplicación web desarrollada
-	en \gls{django} para la gestión de imágenes, un \gls{telegram-bot} para el
+	en \gls{django} para la visualización de imágenes, un \gls{telegram-bot} para el
 	envío de notificaciones en tiempo real, y una base de datos \gls{postgresql}
 	para el almacenamiento persistente. Todo el sistema está
 	contenedorizado mediante \gls{docker} para facilitar su despliegue.
@@ -113,7 +114,7 @@ Silva Schmies \\\\Tutor:\\Dr. Ing. Sergio Eduardo Moya}
 	\vspace{2em}
 	\noindent\textbf{Palabras Clave} - Cámaras Trampa, Internet de las Cosas,
 	Inteligencia Artificial, Monitoreo de Fauna, Detección de Intrusos,
-	ESP-MESH, SpeciesNet, Selva Misionera
+	ESP-MESH-LITE, SpeciesNet, Selva Misionera
 \end{abstract}
 
 \chapter*{Agradecimientos}
@@ -179,7 +180,7 @@ personas y vehículos, generando alertas inmediatas ante eventos relevantes.
 El presente trabajo, desarrollado en el marco de la Universidad Nacional
 de Misiones, propone el diseño e implementación de un sistema de
 monitoreo y alerta temprana para áreas protegidas de la región, que integra una red
-de nodos de captura basados en \gls{ESP32} comunicados mediante \gls{ESP-MESH},
+de nodos de captura basados en \gls{ESP32} comunicados mediante \gls{ESP-MESH-LITE},
 un servidor de procesamiento con \gls{ia} basado en \gls{speciesnet}, y
 un sistema de notificaciones a través de \gls{telegram-bot}.
 
@@ -340,7 +341,7 @@ su solución utiliza conectividad satelital ---con costos operativos
 significativos---, el concepto de alertas en tiempo real basadas en
 detección automática constituye un pilar fundamental del sistema propuesto
 en este trabajo. La diferencia principal radica en que nuestra solución
-emplea redes \gls{mesh} locales y conectividad Wi-Fi/TCP, reduciendo
+emplea redes \gls{mesh} locales y conectividad Wi-Fi, reduciendo
 considerablemente los costos de operación.
 
 Otro proyecto directamente comparable es AiCatcher, desarrollado por
@@ -549,7 +550,7 @@ monitoreo en densas zonas de selva subtropical es extremadamente complejo.
 
 La importancia de la \gls{selva-misionera} trasciende la mera preservación de
 especies; actúa como regulador climático, protector de cuencas hídricas y
-proveedor de \glspl{servicios-ecosistemicos} esenciales para la región, incluyendo
+proveedor de \gls{servicios-ecosistemicos} esenciales para la región, incluyendo
 la regulación del ciclo hidrológico, el secuestro de carbono y la protección
 contra la erosión del suelo.
 
@@ -692,7 +693,7 @@ operativas:
 	\item \textbf{Activación pasiva:} El sensor \gls{pir} detecta cambios de
 	      temperatura asociados al movimiento de animales o personas.
 	\item \textbf{Operación silenciosa:} Los modelos con flash infrarrojo
-	      (\gls{ir}) permiten capturas nocturnas sin alertar a la fauna.
+          permiten capturas nocturnas sin alertar a la fauna.
 \end{itemize}
 
 En Misiones, estas cámaras son utilizadas tanto por organismos gubernamentales
@@ -775,10 +776,10 @@ La convergencia de tres desarrollos tecnológicos recientes crea una oportunidad
 	      ofrecen capacidades de procesamiento, conectividad Wi-Fi y gestión
 	      de energía a costos inferiores a los \qty{10}{USD} por unidad, permitiendo
 	      despliegues a escala con presupuestos limitados.
-	\item[Redes mesh autoorganizadas:] Protocolos como \gls{ESP-MESH} permiten
-	      extender la conectividad en áreas sin infraestructura celular,
-	      creando redes que se adaptan dinámicamente a la topología del terreno
-	      y toleran fallos de nodos individuales.
+	\item[Redes mesh autoorganizadas:] Protocolos como \gls{ESP-MESH-LITE} permiten
+          extender la conectividad en áreas sin infraestructura celular,
+          creando redes que se adaptan dinámicamente a la topología del terreno
+          y toleran fallos de nodos individuales.
 	\item[Inteligencia artificial para visión:] Modelos de \gls{codigo-abierto}
 	      como \gls{speciesnet} \cite{gadot2024crop} y \gls{megadetector}
 	      \cite{beery2019megadetector} permiten clasificar automáticamente
@@ -839,9 +840,9 @@ semanas ---típico de las \glspl{camara-trampa} tradicionales--- a minutos.
 	      \gls{mesh}.
 
 	\item \textbf{Desarrollar una red mesh autoorganizada} utilizando el
-	      protocolo \gls{ESP-MESH}, que permita extender la conectividad en
-	      áreas sin cobertura celular mediante el encadenamiento de nodos
-	      intermedios.
+          protocolo \gls{ESP-MESH-LITE}, que permita extender la conectividad en
+          áreas sin cobertura celular mediante el encadenamiento de nodos
+          intermedios.
 
 	\item \textbf{Implementar un servidor de procesamiento} capaz de recibir
 	      las imágenes transmitidas por la red, clasificarlas automáticamente
@@ -928,12 +929,13 @@ trabajos futuros.
 	      incluyen iluminación infrarroja para capturas nocturnas, el prototipo
 	      desarrollado no cuenta con esta capacidad.
 
-	\item[Resolución de imagen:] Además de las limitaciones propias del sensor
-	      OV2640, los protocolos \gls{ESP-MESH} y \gls{ESP-MDF} imponen
-	      restricciones en el tamaño máximo de los datos transmitidos por
-	      paquete. Esto limita la resolución efectiva de las imágenes que
-	      pueden transmitirse a través de la red, requiriendo compresión
-	      adicional que afecta la calidad final.
+	\item[Resolución de imagen:] La resolución efectiva del prototipo está
+          limitada principalmente por las capacidades del sensor OV2640 y el
+          nivel de compresión \gls{jpeg} necesario para mantener tamaños de
+          archivo adecuados para la transmisión inalámbrica. En las pruebas
+          realizadas se transmitieron exitosamente imágenes de entre 30 y
+          35 KB en resolución VGA (640$\times$480), aunque no se evaluó el
+          comportamiento con la resolución máxima del sensor.
 \end{description}
 
 \subsection{Consideraciones sobre el tiempo de respuesta}
@@ -1181,19 +1183,21 @@ capacidades tradicionales de monitoreo de fauna \cite{whytock2023iridium}.
 Una arquitectura típica de \gls{iot} se compone de tres capas fundamentales:
 
 \begin{description}
-	\item[Capa de Percepción:] Formada por los sensores y actuadores que
-	      interactúan directamente con el entorno físico. En este proyecto,
-	      incluye los sensores \gls{pir} y los módulos de cámara.
-	\item[Capa de Red:] Encargada de la transmisión de datos desde los nodos
-	      sensores hacia los sistemas de procesamiento. Aquí se implementa
-	      la red \gls{ESP-MESH} que permite la comunicación entre nodos.
-	\item[Capa de Aplicación:] Donde los datos son procesados, almacenados y
-	      presentados al usuario final. Corresponde al servidor \gls{django}
-	      con el modelo de \gls{ia} y el sistema de notificaciones.
+	\item[Capa de Percepción:] Formada por los nodos de cámara
+		(mesh-node) equipados con sensor \gls{pir} y módulo de cámara,
+		responsables de detectar movimiento y capturar imágenes.
+	\item[Capa de Red:] Constituida por la red \gls{ESP-MESH-LITE} que
+		permite la comunicación entre nodos de cámara y el nodo raíz,
+		extendiendo la cobertura sin infraestructura adicional. Cada nodo
+		posee su propia pila de red \gls{lwip} y puede comunicarse con el
+		servidor de forma independiente.
+	\item[Capa de Aplicación:] Compuesta por el servidor de
+          procesamiento que recibe las imágenes, realiza la inferencia
+          mediante \gls{ia} y notifica al usuario a través de \gls{telegram-bot}.
 \end{description}
 
 El sistema desarrollado en esta tesis abarca estas tres capas, utilizando
-nodos \gls{ESP32} en la percepción, \gls{ESP-MESH} en la red y un servidor
+nodos \gls{ESP32} en la percepción, \gls{ESP-MESH-LITE} en la red y un servidor
 \gls{django} con \gls{speciesnet} en la aplicación.
 
 \subsection{Protocolos de comunicación inalámbrica}
@@ -1218,7 +1222,7 @@ de banda:
 	      consumo energético.
 \end{description}
 
-Las redes \gls{mesh} basadas en Wi-Fi, como \gls{ESP-MESH}, ofrecen un equilibrio
+Las redes \gls{mesh} basadas en Wi-Fi, como \gls{ESP-MESH-LITE}, ofrecen un equilibrio
 adecuado: permiten la transmisión de imágenes gracias al ancho de banda del
 protocolo 802.11, mientras extienden la cobertura sin depender de una única
 estación base o infraestructura celular preexistente.
@@ -1247,17 +1251,33 @@ Las topologías de red determinan cómo se organizan y comunican los dispositivo
 	      vecinos, creando redundancia en las rutas de comunicación.
 \end{description}
 
-\gls{ESP-MESH} implementa una topología de árbol con capacidades mesh: cada
+\gls{ESP-MESH-LITE} implementa una topología de árbol con capacidades mesh: cada
 \gls{nodo} puede actuar simultáneamente como estación (conectada a un padre)
 y como Punto de Acceso (para nodos hijos), utilizando el modo \gls{AP-STA}.
 Esto facilita el despliegue en terrenos difíciles o boscosos, donde los
 obstáculos físicos limitan la línea de vista directa.
 
-\subsection{ESP-MESH: características técnicas}
+\subsection{ESP-MESH-LITE: características técnicas}
 
-\gls{ESP-MESH} es el protocolo desarrollado por Espressif basado en el estándar
-IEEE 802.11, que permite conectar cientos de dispositivos \gls{ESP32} en una
-sola red \cite{espmesh2023}. Sus principales características incluyen:
+\gls{ESP-MESH-LITE} es un protocolo de red mesh desarrollado por Espressif,
+construido sobre el modo \gls{AP-STA} de Wi-Fi (IEEE 802.11), que permite
+interconectar dispositivos \gls{ESP32} en una red autoorganizada
+\cite{espmesh2023}. A diferencia de implementaciones mesh convencionales donde
+los datos deben propagarse explícitamente hasta un nodo central, en
+\gls{ESP-MESH-LITE} cada nodo habilita su propia pila de protocolos de red
+(\gls{lwip}), obteniendo una dirección IP asignada por su nodo padre. Esto
+permite que cualquier nodo de la red acceda a la red externa de forma
+independiente, invocando interfaces de red estándar como sockets, MQTT o HTTP.
+
+El reenvío de datos entre nodos se realiza de forma transparente en la capa de
+red: cada nodo padre es responsable de reenviar los paquetes de sus nodos
+adyacentes sin inspeccionar ni procesar la capa de aplicación. De esta manera,
+la información de comunicación de un nodo hijo es ``insensible'' para los nodos
+intermedios, lo que simplifica significativamente el desarrollo de aplicaciones
+al permitir que cada nodo se comporte funcionalmente como si estuviera conectado
+directamente al router \cite{espmesh2023}.
+
+Sus principales características incluyen:
 
 \begin{description}
 	\item[Autoorganización:] Los nodos seleccionan automáticamente su padre
@@ -1267,28 +1287,11 @@ sola red \cite{espmesh2023}. Sus principales características incluyen:
 	      nuevo padre, sin intervención manual.
 	\item[Profundidad configurable:] La red puede extenderse hasta una
 	      profundidad máxima definida por el usuario (típicamente 6-10 niveles).
-	\item[Transmisión de datos:] Soporta comunicación unicast (a un nodo
-	      específico), multicast (a un grupo) y broadcast (a todos los nodos).
+	\item[Nodo raíz como puerta de enlace:] El nodo raíz es el único con
+          conexión directa al router Wi-Fi y actúa como puente entre la red
+          mesh y la red IP externa, reenviando los paquetes al router de
+          forma transparente.
 \end{description}
-
-\subsection{Componente Mwifi del ESP-MDF}
-
-\gls{mwifi} es un componente del \gls{ESP-MDF} que proporciona una capa de
-abstracción sobre \gls{ESP-MESH}, simplificando el desarrollo de aplicaciones.
-Sus principales aportes incluyen:
-
-\begin{itemize}
-	\item APIs de alto nivel para envío y recepción de datos fragmentados
-	\item Gestión automática de la fragmentación de paquetes grandes (como
-	      imágenes) que exceden el tamaño máximo de trama Wi-Fi
-	\item Soporte para transmisión \gls{tcp} y UDP sobre la red mesh
-	\item Eventos de \gls{callback} para monitorear el estado de la topología
-	\item Herramientas de depuración integradas
-\end{itemize}
-
-La capacidad de fragmentar y reensamblar datos es crítica para este proyecto,
-ya que las imágenes capturadas por los nodos exceden significativamente el
-tamaño máximo de paquete soportado por el protocolo mesh.
 
 \section{Inteligencia Artificial aplicada a visión por computadora}
 
@@ -1391,20 +1394,21 @@ La variante ESP32-CAM incorpora un módulo de cámara OV2640 y ranura para
 tarjeta microSD, proporcionando una plataforma compacta para aplicaciones
 de captura de imagen con conectividad inalámbrica.
 
-\subsection{ESP-IDF y ESP-MDF}
+\subsection{ESP-IDF y ESP-MESH-LITE}
 
 El \gls{ESP-IDF} (IoT Development Framework) es el entorno de desarrollo
 oficial para el ESP32 \cite{espmesh2023}, basado en \gls{freertos}. Proporciona
 control preciso sobre el hardware, gestión de energía y acceso a todas las
 funcionalidades del chip.
 
-Sobre este entorno, el \gls{ESP-MDF} (Mesh Development Framework) agrega
-herramientas específicas para redes mesh:
+Sobre este entorno, \gls{ESP-MESH-LITE} agrega las capacidades de red mesh:
 
 \begin{itemize}
-	\item Componente \gls{mwifi} para comunicación mesh de alto nivel
-	\item Gestión automática de topología y enrutamiento
-	\item Capacidades de actualización remota de \gls{firmware} \gls{ota}
+	\item Gestión automática de topología y enrutamiento en modo \gls{AP-STA}
+	\item Pila de red \gls{lwip} independiente por nodo, permitiendo
+          comunicaciones HTTP estándar desde cualquier nodo
+	\item Reenvío transparente de paquetes en capa de red entre nodos
+	\item \Gls{autocuracion} ante fallos de nodos intermedios
 	\item Herramientas de depuración y monitoreo de red
 \end{itemize}
 
@@ -1564,10 +1568,7 @@ en el diagrama de Gantt de la Figura \ref{fig:gantt-desarrollo}:
 % TODO: Agregar archivo gantt.puml y generar imagen
 \begin{figure}[htbp]
 	\centering
-	% \includegraphics[width=\textwidth]{figures/gantt-desarrollo.png}
-	\fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}
-			[Diagrama de Gantt - Por agregar]
-			\vspace{2cm}}}
+	\includegraphics[width=\textwidth]{img/cronogramaDeDesarrollo.pdf}
 	\caption{Cronograma de desarrollo del proyecto.}
 	\label{fig:gantt-desarrollo}
 \end{figure}
@@ -1579,8 +1580,9 @@ en el diagrama de Gantt de la Figura \ref{fig:gantt-desarrollo}:
 \begin{description}
 	\item[Editor de código:] Visual Studio Code con extensiones para desarrollo
 	      en C/C++ (ESP-IDF), Python y Docker.
-	\item[Framework de firmware:] \gls{ESP-IDF} y \gls{ESP-MDF} para el desarrollo
-	      del código de los nodos \gls{ESP32}.
+	\item[Framework de firmware:] \gls{ESP-IDF} con el componente
+          \gls{ESP-MESH-LITE} para el desarrollo del código de los nodos
+          \gls{ESP32}.
 	\item[Framework web:] \gls{django} para el servidor de aplicación.
 	\item[Bot de notificaciones:] Librería \texttt{python-telegram-bot} para
 	      la implementación del sistema de alertas mediante Telegram.
@@ -1601,13 +1603,12 @@ en el diagrama de Gantt de la Figura \ref{fig:gantt-desarrollo}:
 
 \subsection{Control de versiones y despliegue}
 
-El código fuente del proyecto fue organizado en cuatro repositorios \gls{git} alojados
+El código fuente del proyecto fue organizado en tres repositorios \gls{git} alojados
 en GitHub:
 \begin{enumerate}
-	\item Repositorio del \gls{firmware} para nodos de cámara:\\
-	      \url{https://github.com/fabcontigiani/mesh-node-capstone-project}
-	\item Repositorio del \gls{firmware} para nodo raíz:\\
-	      \url{https://github.com/fabcontigiani/root-node-capstone-project}
+	\item Repositorio del \gls{firmware} para las cámaras (nodo de cámara, nodo
+	      raíz y nodo repetidor):\\
+	      \url{https://github.com/GabyDs/trapcam_mesh}
 	\item Repositorio del servidor de aplicación:\\
 	      \url{https://github.com/fabcontigiani/server-capstone-project}
 	\item Repositorio del servidor de inferencia y anotación de imágenes:\\
@@ -1725,16 +1726,33 @@ coordinada para lograr la detección y notificación de eventos en tiempo
 operativo:
 
 \begin{enumerate}
-	\item \textbf{Capa de percepción:} Formada por los nodos de cámara
-	      (mesh-node) equipados con sensor \gls{pir} y módulo de cámara,
-	      responsables de detectar movimiento y capturar imágenes.
-	\item \textbf{Capa de red:} Constituida por la red \gls{ESP-MESH} que
-	      permite la comunicación entre nodos de cámara y el nodo raíz,
-	      extendiendo la cobertura sin infraestructura adicional.
-	\item \textbf{Capa de aplicación:} Compuesta por el servidor de
-	      procesamiento que recibe las imágenes, realiza la inferencia
-	      mediante \gls{ia} y notifica al usuario a través de \gls{telegram-bot}.
+    \item \textbf{Capa de percepción:} Formada por los nodos de cámara
+          (mesh-node) equipados con sensor \gls{pir} y módulo de cámara,
+          responsables de detectar movimiento y capturar imágenes.
+    \item \textbf{Capa de red:} Constituida por la red \gls{ESP-MESH-LITE} que
+          permite la comunicación entre nodos de cámara y el nodo raíz,
+          extendiendo la cobertura sin infraestructura adicional. Cada nodo
+          posee su propia pila de red \gls{lwip} y puede comunicarse con el
+          servidor de forma independiente.
+    \item \textbf{Capa de aplicación:} Compuesta por el servidor de
+          procesamiento que recibe las imágenes, realiza la inferencia
+          mediante \gls{ia} y notifica al usuario a través de \gls{telegram-bot}.
 \end{enumerate}
+
+La Figura~\ref{fig:arquitectura-general} presenta un diagrama de alto nivel
+de la arquitectura del sistema.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.8\textwidth]{img/arquitecturaGeneralH.png}
+	% \fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}
+	% 		[Diagrama de arquitectura general del sistema]
+	% 		\vspace{3cm}}}
+	\caption{Arquitectura general del sistema de monitoreo y alerta temprana.}
+	\label{fig:arquitectura-general}
+\end{figure}
+
+\newpage
 
 El flujo de datos del sistema opera de la siguiente manera:
 
@@ -1742,12 +1760,12 @@ El flujo de datos del sistema opera de la siguiente manera:
 	\item El sensor \gls{pir} detecta movimiento y genera una interrupción
 	      en el microcontrolador.
 	\item El nodo de cámara captura una imagen en formato \gls{jpeg}.
-	\item La imagen se fragmenta y transmite a través de la red \gls{mesh}
-	      hasta el nodo raíz.
-	\item El nodo raíz envía la imagen al servidor mediante una petición
-	      HTTP POST.
-	\item El servidor procesa la imagen con \gls{speciesnet} (que incluye
-	      \gls{megadetector} y modelos de clasificación taxonómica).
+	\item El nodo realiza una petición HTTP POST al servidor, que se propaga
+          de forma transparente a través de la red \gls{ESP-MESH-LITE}: cada
+          nodo intermedio reenvía los paquetes en la capa de red hasta
+          alcanzar el nodo raíz, que los entrega al router Wi-Fi.
+	\item El servidor recibe la imagen y la procesa con \gls{speciesnet} (que
+          incluye \gls{megadetector} y modelos de clasificación taxonómica).
 	\item Si se detecta un objeto de interés con alto grado de confianza,
 	      el bot de Telegram notifica al usuario enviando la imagen original,
 	      la imagen anotada con las detecciones, y la lista de clasificaciones.
@@ -1777,17 +1795,39 @@ principales:
 \subsection{Diseño del firmware}
 
 El firmware del nodo de cámara se desarrolló utilizando \gls{ESP-IDF} y
-\gls{ESP-MDF}, implementando las siguientes funcionalidades:
+\gls{ESP-MESH-LITE}, implementando las siguientes funcionalidades:
 
 \begin{itemize}
-	\item Inicialización y configuración de la cámara OV2640
-	\item Configuración del pin GPIO como interrupción externa para el sensor PIR
-	\item Conexión a la red \gls{ESP-MESH} como nodo hijo
-	\item Captura y compresión de imágenes en formato \gls{jpeg}
-	\item Almacenamiento local de imágenes en tarjeta microSD como respaldo
-	\item Transmisión de imágenes mediante \gls{mwifi}
-	\item Gestión del modo \gls{power-save} para reducir consumo energético
+    \item Inicialización y configuración de la cámara OV2640
+    \item Configuración del pin GPIO como interrupción externa para el sensor PIR
+    \item Conexión a la red \gls{ESP-MESH-LITE} como nodo hijo en modo \gls{AP-STA}
+    \item Captura y compresión de imágenes en formato \gls{jpeg}
+    \item Almacenamiento local de imágenes en tarjeta microSD como respaldo
+    \item Transmisión de imágenes al servidor mediante peticiones HTTP POST,
+          propagadas de forma transparente a través de la red mesh
+    \item Gestión del modo \gls{power-save} para reducir consumo energético
 \end{itemize}
+
+El ciclo de operación sigue el siguiente flujo: una tarea de \gls{freertos}
+(\texttt{pir\_task}) permanece bloqueada esperando una notificación de la
+\gls{isr} del sensor \gls{pir}. Cuando se detecta movimiento, la interrupción
+notifica a la tarea, que procede a capturar una imagen, almacenarla localmente
+en la tarjeta microSD como respaldo, y transmitirla al servidor mediante una
+petición HTTP POST a través de la red \gls{ESP-MESH-LITE}. Una vez completada
+la transmisión, la tarea vuelve a bloquearse en espera de la siguiente
+detección.
+
+La Figura~\ref{fig:diagrama-firmware-nodo} ilustra este flujo de operación.
+
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=0.7\textwidth]{img/diagramaFlujoLeaf.png}
+	\fbox{\parbox{0.7\textwidth}{\centering\vspace{3cm}
+			[Diagrama de flujo del firmware del nodo de cámara]
+			\vspace{3cm}}}
+	\caption{Diagrama de flujo del firmware del nodo de cámara.}
+	\label{fig:diagrama-firmware-nodo}
+\end{figure}
 
 \subsection{Captura de imágenes}
 
@@ -1795,22 +1835,24 @@ La captura de imágenes se realiza con los siguientes parámetros:
 
 \begin{description}
 	\item[Resolución:] 640 $\times$ 480 píxeles (VGA)
-	\item[Formato:] \gls{jpeg} con compresión alta
-	\item[Tamaño típico:] Inferior a \qty{8}{kB} por imagen, ajustando el nivel
-	      de compresión para cumplir con el límite de \gls{ESP-MDF}
+	\item[Formato:] \gls{jpeg} con compresión configurable
+	\item[Tamaño típico:] Entre 30 y 35 KB por imagen
 \end{description}
 
-El tamaño de imagen se mantiene por debajo del límite de \qty{8}{kB} impuesto
-por \gls{ESP-MDF} para el tamaño máximo de paquete de aplicación. Este
-límite determina el nivel de compresión \gls{jpeg} necesario, priorizando
-la transmisión confiable sobre la calidad de imagen.
+Gracias a la arquitectura de \gls{ESP-MESH-LITE}, donde cada nodo posee su
+propia pila de red \gls{lwip} y puede realizar peticiones HTTP de forma
+independiente, no existen restricciones artificiales en el tamaño de los datos
+transmitidos. El nivel de compresión se ajusta para balancear la calidad de
+imagen con el tiempo de transmisión inalámbrica.
 
 \subsection{Integración del sensor PIR}
 
 El sensor HC-SR501 se conecta a un pin GPIO del ESP32-CAM configurado
 como fuente de interrupción externa. Cuando el sensor detecta movimiento
 (cambio en la radiación infrarroja), genera una señal HIGH que dispara
-la rutina de captura de imagen.
+una \gls{isr}. Esta rutina de interrupción notifica a la tarea
+\texttt{pir\_task} de \gls{freertos}, que se encontraba bloqueada en espera,
+para que proceda con la captura y transmisión de la imagen.
 
 El sensor permite ajustar:
 \begin{itemize}
@@ -1818,21 +1860,36 @@ El sensor permite ajustar:
 	\item \textbf{Tiempo de retardo:} Duración de la señal HIGH (\qtyrange{5}{300}{s})
 \end{itemize}
 
-\subsection{Compresión y transmisión}
+La Figura~\ref{fig:esquematico-nodo} muestra el esquema de conexiones
+del nodo de cámara.
 
-La transmisión de imágenes a través de la red \gls{mesh} utiliza el
-componente \gls{mwifi} del \gls{ESP-MDF}. Dado que las imágenes se
-mantienen por debajo del límite de 8 KB, se transmiten como un único
-paquete de aplicación, simplificando el manejo de datos.
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=0.7\textwidth]{figures/esquematico-nodo.png}
+	\fbox{\parbox{0.7\textwidth}{\centering\vspace{3cm}
+			[Esquema de conexiones del nodo de cámara]
+			\vspace{3cm}}}
+	\caption{Esquema de conexiones del nodo de cámara.}
+	\label{fig:esquematico-nodo}
+\end{figure}
 
-El componente \gls{mwifi} proporciona:
+\subsection{Transmisión}
 
-\begin{itemize}
-	\item Fragmentación automática a nivel de capa de enlace
-	\item Ventana deslizante para control de flujo
-	\item Retransmisión automática de paquetes perdidos
-	\item Reensamblado de fragmentos en el destino
-\end{itemize}
+La transmisión de imágenes aprovecha la arquitectura de capa de red IP de
+\gls{ESP-MESH-LITE}. Cada nodo de cámara, al contar con su propia pila de
+protocolos \gls{lwip} y una dirección IP asignada por su nodo padre, puede
+realizar peticiones HTTP POST estándar hacia el servidor de aplicación.
+
+Estas peticiones se propagan de forma transparente a través de los nodos
+intermedios de la red mesh: cada nodo padre reenvía los paquetes en la capa
+de red sin inspeccionar la capa de aplicación, hasta alcanzar el \gls{nodo-raiz}.
+Este último, al ser el único nodo con conexión directa al router Wi-Fi, actúa
+como puerta de enlace hacia la red externa, entregando los paquetes al servidor.
+
+Desde la perspectiva del nodo de cámara, el proceso es equivalente a realizar
+una petición HTTP convencional, lo que simplifica significativamente el
+desarrollo del firmware al eliminar la necesidad de gestionar manualmente la
+fragmentación, el reensamblado o el enrutamiento de datos.
 
 \subsection{Carcasa para impresión 3D}
 
@@ -1857,6 +1914,29 @@ El plano 2D del diseño final se incluye en el Anexo~\ref{anexo:planos-carcasa}
 (Figura~\ref{fig:plano-carcasa} y Figura~\ref{fig:plano-base}). El modelo 3D
 modificado está disponible públicamente en Printables\footnote{\url{www.printables.com/model/1532349-case-for-esp32_cam-trail-camera-pir-sensor-buck-co}}.
 
+La Figura~\ref{fig:modelo-3d-carcasa} muestra el modelo 3D de la carcasa
+y la Figura~\ref{fig:carcasa-impresa} el resultado de la impresión.
+
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=0.6\textwidth]{figures/modelo-3d-carcasa.png}
+	\fbox{\parbox{0.6\textwidth}{\centering\vspace{3cm}
+			[Modelo 3D de la carcasa del nodo de cámara]
+			\vspace{3cm}}}
+	\caption{Modelo 3D de la carcasa del nodo de cámara.}
+	\label{fig:modelo-3d-carcasa}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=0.6\textwidth]{figures/carcasa-impresa.jpg}
+	\fbox{\parbox{0.6\textwidth}{\centering\vspace{3cm}
+			[Foto de carcasa impresa en PLA con componentes ensamblados]
+			\vspace{3cm}}}
+	\caption{Carcasa impresa en PLA con componentes ensamblados.}
+	\label{fig:carcasa-impresa}
+\end{figure}
+
 \section{Nodo raíz (root-node)}
 
 \subsection{Diseño del hardware}
@@ -1870,24 +1950,42 @@ módulo de cámara, que actúa como puerta de enlace entre la red
 El firmware del nodo raíz implementa:
 
 \begin{itemize}
-	\item Inicialización como nodo raíz de la red \gls{ESP-MESH}
-	\item Recepción y reensamblado de imágenes fragmentadas desde los
-	      nodos hijos
-	\item Conexión Wi-Fi a un router doméstico para acceso a internet
-	\item Cliente HTTP para envío de imágenes al servidor
+    \item Inicialización como nodo raíz de la red \gls{ESP-MESH-LITE}
+    \item Conexión Wi-Fi al router doméstico para acceso a internet
+    \item Reenvío transparente de paquetes IP desde los nodos hijos
+          hacia la red externa
+    \item Asignación de direcciones IP a nodos hijos directamente conectados
 \end{itemize}
 
-\subsection{Conexión con servidor TCP}
+A diferencia de los nodos de cámara, el nodo raíz no necesita procesar ni
+inspeccionar las imágenes transmitidas. Su función principal es actuar como
+puente entre la red mesh y la red IP externa, reenviando los paquetes de
+forma transparente en la capa de red.
 
-El nodo raíz envía las imágenes recibidas al servidor de aplicación
-mediante peticiones HTTP POST. Cada imagen se transmite como cuerpo
-de la petición junto con metadatos (identificador del nodo origen,
-timestamp).
+La Figura~\ref{fig:diagrama-firmware-root} muestra el flujo de inicialización
+del nodo raíz.
 
-La conexión al servidor se realiza a través de Wi-Fi conectado a un
-router doméstico con acceso a internet. En la sección de trabajos
-futuros se discute la posibilidad de reemplazar este enlace por
-tecnologías de mayor alcance para despliegues en zonas remotas.
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=0.6\textwidth]{figures/diagrama-firmware-root.png}
+	\fbox{\parbox{0.6\textwidth}{\centering\vspace{3cm}
+			[Diagrama de flujo del firmware del nodo raíz]
+			\vspace{3cm}}}
+	\caption{Diagrama de flujo del firmware del nodo raíz.}
+	\label{fig:diagrama-firmware-root}
+\end{figure}
+
+\subsection{Conexión con la red externa}
+
+El nodo raíz es el único punto de salida a internet de la red mesh. Se conecta
+a un router Wi-Fi doméstico como estación (STA), proporcionando a todos los
+nodos de la red acceso a la red IP externa de forma transparente.
+
+Cuando un nodo de cámara envía una petición HTTP al servidor, los paquetes
+son reenviados nodo a nodo en la capa de red hasta alcanzar el nodo raíz,
+que los entrega al router para su transmisión hacia el servidor. En la
+sección de trabajos futuros se discute la posibilidad de reemplazar este
+enlace por tecnologías de mayor alcance para despliegues en zonas remotas.
 
 \subsection{Gestión de la red mesh}
 
@@ -1896,7 +1994,7 @@ El nodo raíz es responsable de:
 \begin{itemize}
 	\item Mantener la topología de la red mesh
 	\item Gestionar la conexión y desconexión de nodos hijos
-	\item Enrutar los datos desde cualquier nodo hasta sí mismo
+	\item Actuar como puerta de enlace IP para toda la red
 	\item Proporcionar sincronización de tiempo a la red
 \end{itemize}
 
@@ -1907,35 +2005,56 @@ aunque en las pruebas realizadas se utilizaron únicamente 3 nodos.
 
 \subsection{Topología de la red}
 
-La red \gls{ESP-MESH} se organiza en una topología de árbol donde:
+La red \gls{ESP-MESH-LITE} se organiza en una topología de árbol donde:
 
 \begin{description}
-	\item[Nodo raíz:] Único punto de conexión con la red externa (router Wi-Fi)
-	\item[Nodos intermedios:] Pueden existir nodos que actúen como repetidores
-	\item[Nodos hoja:] Los nodos de cámara que capturan y transmiten imágenes
+    \item[Nodo raíz:] Único punto de conexión con la red externa (router Wi-Fi).
+          Actúa como puerta de enlace IP para toda la red mesh.
+    \item[Nodos intermedios:] Pueden existir nodos que actúen como repetidores,
+          reenviando paquetes de forma transparente en la capa de red.
+    \item[Nodos hoja:] Los nodos de cámara que capturan y transmiten imágenes.
 \end{description}
 
 Cada nodo opera en modo \gls{AP-STA}, actuando simultáneamente como
 punto de acceso para nodos hijos y como estación conectada a su nodo padre.
+Cada nodo habilita su propia pila de protocolos \gls{lwip}, obteniendo una
+dirección IP que le permite comunicarse de forma independiente con la red
+externa.
+
+La Figura~\ref{fig:topologia-mesh} ilustra la topología de la red y el flujo
+de datos desde los nodos de cámara hasta el servidor.
+
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=0.8\textwidth]{figures/topologia-mesh.png}
+	\fbox{\parbox{0.8\textwidth}{\centering\vspace{3cm}
+			[Topología de la red ESP-MESH-LITE y flujo de datos]
+			\vspace{3cm}}}
+	\caption{Topología de la red ESP-MESH-LITE y flujo de datos.}
+	\label{fig:topologia-mesh}
+\end{figure}
 
 \subsection{Protocolo de comunicación}
 
-La comunicación utiliza el protocolo \gls{ESP-MESH} implementado sobre
+La comunicación utiliza el protocolo \gls{ESP-MESH-LITE} implementado sobre
 Wi-Fi 802.11, con las siguientes características:
 
 \begin{itemize}
 	\item Autoorganización: los nodos seleccionan su padre óptimo basándose
 	      en \gls{rssi}
 	\item \Gls{autocuracion}: reconexión automática ante fallos de nodos
-	\item Soporte para mensajes unicast y broadcast
-	\item Fragmentación y reensamblado de datos grandes mediante \gls{mwifi}
+	\item Reenvío transparente en capa de red: los nodos intermedios propagan
+          paquetes sin inspeccionar la capa de aplicación
+	\item Acceso independiente a red: cada nodo puede realizar peticiones HTTP
+          de forma autónoma
 \end{itemize}
 
 \subsection{Formato de datos}
 
-Las imágenes se transmiten como datos binarios (\gls{jpeg}) precedidos
-de un encabezado que incluye el tamaño total de la imagen y el
-identificador del nodo origen.
+Las imágenes se transmiten mediante peticiones HTTP POST estándar desde cada
+nodo de cámara hacia el servidor de aplicación. Cada petición incluye la imagen
+en formato \gls{jpeg} como cuerpo de la solicitud, junto con metadatos
+(identificador del nodo origen, timestamp) en los encabezados HTTP.
 
 \section{Servicio de detección (wildlife-detection)}
 
@@ -1971,12 +2090,25 @@ El servicio expone un endpoint \texttt{/predict} que:
 El pipeline de \gls{speciesnet} opera en dos fases:
 
 \begin{enumerate}
-	\item \textbf{Detección:} \gls{megadetector} identifica regiones de
-	      interés clasificándolas como animal, persona o vehículo.
-	\item \textbf{Clasificación:} Para las regiones detectadas como animales,
-	      se aplican modelos de clasificación taxonómica que predicen
-	      familia, género y especie.
+    \item \textbf{Detección:} \gls{megadetector} identifica regiones de
+          interés clasificándolas como animal, persona o vehículo.
+    \item \textbf{Clasificación:} Para las regiones detectadas como animales,
+          se aplican modelos de clasificación taxonómica que predicen
+          familia, género y especie.
 \end{enumerate}
+
+La Figura~\ref{fig:pipeline-speciesnet} ilustra las etapas del pipeline de
+procesamiento de imágenes.
+
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=0.8\textwidth]{figures/pipeline-speciesnet.png}
+	\fbox{\parbox{0.8\textwidth}{\centering\vspace{3cm}
+			[Pipeline de detección y clasificación de SpeciesNet]
+			\vspace{3cm}}}
+	\caption{Pipeline de detección y clasificación de SpeciesNet.}
+	\label{fig:pipeline-speciesnet}
+\end{figure}
 
 \section{Servidor de aplicación (server)}
 
@@ -1985,12 +2117,47 @@ El pipeline de \gls{speciesnet} opera en dos fases:
 El servidor de aplicación se desarrolló utilizando \gls{django}, implementando:
 
 \begin{itemize}
-	\item Endpoint HTTP para recepción de imágenes desde el nodo raíz
-	\item Integración con el servicio de detección vía HTTP REST
-	\item Almacenamiento de imágenes y metadatos
-	\item Bot de Telegram para notificaciones
-	\item Interfaz web para visualización de resultados
+    \item Endpoint HTTP para recepción de imágenes desde los nodos de cámara
+    \item Integración con el servicio de detección vía HTTP REST
+    \item Almacenamiento de imágenes y metadatos en base de datos
+    \item Bot de Telegram para notificaciones automáticas ante detecciones
+    \item Interfaz web para visualización y monitoreo de las últimas imágenes
+          recibidas
 \end{itemize}
+
+El flujo de procesamiento en el servidor opera de la siguiente manera:
+
+\begin{enumerate}
+    \item El endpoint HTTP recibe la imagen enviada por un nodo de cámara.
+    \item La imagen se almacena en el sistema de archivos y se registra en la
+          base de datos junto con sus metadatos (nodo de origen, timestamp).
+    \item Se envía la imagen al servicio de inferencia (\gls{speciesnet}) mediante
+          una petición HTTP interna.
+    \item El servicio retorna las detecciones (categorías, confianzas,
+          \glspl{bounding-box}) y clasificaciones taxonómicas.
+    \item Los resultados se almacenan en la base de datos y se genera una imagen
+          anotada con las \glspl{bounding-box}.
+    \item Si alguna detección supera el umbral de confianza configurado, el bot
+          de Telegram envía una notificación al usuario con la imagen original,
+          la imagen anotada y la información de las detecciones.
+\end{enumerate}
+
+La Figura~\ref{fig:diagrama-flujo-servidor} ilustra este flujo de procesamiento.
+
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=0.8\textwidth]{figures/diagrama-flujo-servidor.png}
+	\fbox{\parbox{0.8\textwidth}{\centering\vspace{3cm}
+			[Diagrama de flujo del procesamiento de imágenes en el servidor]
+			\vspace{3cm}}}
+	\caption{Diagrama de flujo del procesamiento de imágenes en el servidor.}
+	\label{fig:diagrama-flujo-servidor}
+\end{figure}
+
+La interfaz web proporciona una vista de monitoreo que muestra las últimas
+imágenes recibidas junto con sus resultados de detección. Esta interfaz fue
+desarrollada como herramienta auxiliar de desarrollo y depuración, y no forma
+parte del producto final del sistema de alertas.
 
 \subsection{Gestión de imágenes}
 
@@ -2037,10 +2204,28 @@ El servidor se despliega mediante \gls{docker-compose}, orquestando
 los siguientes servicios:
 
 \begin{itemize}
-	\item Contenedor de la aplicación \gls{django}
-	\item Contenedor de \gls{postgresql}
-	\item Contenedor del servicio de detección con \gls{speciesnet}
+    \item Contenedor de la aplicación \gls{django} (servidor de aplicación
+          y bot de Telegram)
+    \item Contenedor de \gls{postgresql} (base de datos)
+    \item Contenedor del servicio de detección con \gls{speciesnet}
+          (inferencia de IA)
 \end{itemize}
+
+Los contenedores se comunican a través de una red interna de Docker. El
+contenedor de la aplicación Django expone un puerto HTTP para recibir las
+imágenes desde la red mesh, y se comunica internamente con el servicio de
+detección y la base de datos. La Figura~\ref{fig:docker-compose-arquitectura}
+muestra la disposición de los contenedores y sus interacciones.
+
+\begin{figure}[htbp]
+	\centering
+	% \includegraphics[width=0.8\textwidth]{figures/docker-compose-arquitectura.png}
+	\fbox{\parbox{0.8\textwidth}{\centering\vspace{3cm}
+			[Arquitectura de contenedores Docker del servidor]
+			\vspace{3cm}}}
+	\caption{Arquitectura de contenedores Docker del servidor.}
+	\label{fig:docker-compose-arquitectura}
+\end{figure}
 
 \section{Alimentación y consumo energético}
 
@@ -2049,21 +2234,31 @@ en configuración 2S (dos celdas en serie), proporcionando un voltaje
 nominal de \qty{7.4}{V}. El módulo \gls{buck-converter} LM2596 reduce este
 voltaje a \qty{5}{V} para alimentar el ESP32-CAM.
 
-El consumo energético se midió en tres estados de operación:
+El consumo energético varía según el estado de operación del nodo:
 
 \begin{description}
-	\item[Modo \gls{power-save}:] Consumo reducido mientras el nodo espera
-	      eventos, con transmisión Wi-Fi limitada pero CPU activo.
-	\item[Captura de imagen:] Consumo elevado momentáneo durante la
-	      activación de la cámara y compresión JPEG.
-	\item[Transmisión:] Máximo consumo durante el envío de datos por
-	      Wi-Fi a través de la red mesh.
+    \item[Modo \gls{power-save} (espera):] El nodo permanece conectado a la red
+          \gls{ESP-MESH-LITE} con la radio Wi-Fi en modo de ahorro de energía,
+          mientras la tarea de \gls{freertos} espera bloqueada la notificación
+          del sensor \gls{pir}. El consumo se reduce al mantener la radio en
+          estado de baja potencia, pero el CPU permanece activo para responder
+          a eventos de la red mesh y del sensor.
+    \item[Captura de imagen:] Consumo elevado momentáneo durante la activación
+          del sensor OV2640, la captura de la imagen y la compresión \gls{jpeg}
+          en hardware.
+    \item[Transmisión:] Máximo consumo durante el envío de la petición HTTP
+          POST a través de la red mesh, con la radio Wi-Fi en máxima potencia.
 \end{description}
 
-Es importante destacar que el sistema utiliza el modo \gls{power-save}
-de \gls{ESP-MDF} en lugar de \gls{deep-sleep}. El modo power save reduce el
-consumo limitando el tiempo de transmisión Wi-Fi activa, mientras mantiene el
-CPU funcionando para responder a eventos de la red y del sensor PIR.
+Es importante destacar que el sistema utiliza el modo \gls{power-save} de Wi-Fi
+en lugar del modo \gls{deep-sleep} del ESP32. El modo \gls{deep-sleep}
+desconectaría completamente al nodo de la red mesh, impidiendo el reenvío de
+paquetes de otros nodos y rompiendo la topología de la red. Dado que en
+\gls{ESP-MESH-LITE} cada nodo puede actuar como intermediario para el reenvío
+de paquetes en la capa de red, es necesario que todos los nodos mantengan su
+conexión activa. En la sección de trabajos futuros se discute una arquitectura
+alternativa con nodos repetidores dedicados que permitiría el uso de
+\gls{deep-sleep} en los nodos de cámara.
 
 % ==============================================================================
 % Capítulo 8: Pruebas y Resultados
@@ -2102,9 +2297,9 @@ Las pruebas se realizaron utilizando la siguiente configuración de hardware:
 El software se desplegó con la siguiente configuración:
 
 \begin{itemize}
-	\item Firmware compilado con \gls{ESP-IDF} v5.x y \gls{ESP-MDF}
-	\item Contenedores \gls{docker} ejecutándose en servidor Linux
-	\item Base de datos \gls{postgresql}
+	\item Firmware compilado con ESP-IDF v5.x y ESP-MESH-LITE
+	\item Contenedores Docker ejecutándose en servidor Linux
+	\item Base de datos PostgreSQL
 	\item Servicio de inferencia con \gls{speciesnet} y LitServe
 	\item \Gls{telegram-bot} configurado para notificaciones
 \end{itemize}
@@ -2134,7 +2329,7 @@ evaluando:
 \begin{itemize}
 	\item Inicialización correcta de la cámara
 	\item Calidad de imagen a diferentes niveles de compresión
-	\item Tamaño de archivo resultante (objetivo: $<$ 8 KB)
+	\item Tamaño de archivo resultante $\approx$ 30-35 KB para resolución 640x480
 	\item Tiempo de captura y compresión
 \end{itemize}
 
@@ -2489,10 +2684,11 @@ Los principales logros alcanzados incluyen:
 	      tradicionales--- a minutos, habilitando respuestas operativas
 	      antes imposibles.
 
-	\item Se demostró que las redes \gls{mesh} basadas en \gls{ESP-MESH}
-	      son una alternativa viable para extender la cobertura de monitoreo
-	      en áreas sin infraestructura de red, manteniendo la capacidad de
-	      transmitir imágenes.
+	\item Se demostró que las redes \gls{mesh} basadas en \gls{ESP-MESH-LITE}
+          son una alternativa viable para extender la cobertura de monitoreo
+          en áreas sin infraestructura de red, manteniendo la capacidad de
+          transmitir imágenes mediante peticiones HTTP estándar propagadas
+          de forma transparente a través de la red.
 
 	\item Se validó la integración de modelos de detección y clasificación
 	      taxonómica en un pipeline de procesamiento automatizado, capaz de
