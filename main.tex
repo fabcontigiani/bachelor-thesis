@@ -546,7 +546,7 @@ y el águila harpía (\textit{Harpia harpyja}). La presencia de estos grandes
 vertebrados es un indicador clave del estado de salud del ecosistema, pero su
 monitoreo en densas zonas de selva subtropical es extremadamente complejo.
 
-\subsection{Importancia ecológica de la región}
+\subsection{Importancia ecológica de la región y marco legal}
 
 La importancia de la \gls{selva-misionera} trasciende la mera preservación de
 especies; actúa como regulador climático, protector de cuencas hídricas y
@@ -628,9 +628,11 @@ de la provincia permite la entrada de personas y vehículos no autorizados para
 actividades ilícitas. Entre las más frecuentes se encuentran:
 
 \begin{itemize}
-	\item Pesca ilegal en cursos de agua dentro de reservas.
-	\item Desmonte encubierto para expansión de cultivos.
+	\item Pesca ilegal en cursos de agua dentro de reservas \cite{escobar2025politica}.
+	\item Desmonte encubierto para expansión de cultivos \cite{escobar2025politica}.
 	\item Instalación de campamentos de caza con infraestructura permanente.
+	\item Apertura ilegal de caminos y loteos clandestinos en zonas costeras \cite{ecologiamisiones2026control}.
+	\item Extracción de madera nativa con maquinaria pesada en lotes fiscales y privados \cite{ecologiamisiones2026control}.
 \end{itemize}
 
 Sin un sistema de \gls{alerta-temprana}, estas intrusiones frecuentemente solo se
@@ -704,9 +706,9 @@ realizar censos de fauna, y documentar la biodiversidad de las reservas
 \subsection{Patrullajes terrestres}
 
 Complementariamente, el Cuerpo de Guardaparques realiza patrullajes periódicos
-a pie, en vehículo o a caballo. Estos recorridos permiten detectar indicios
-de actividad ilícita (campamentos, trampas, rastros de tala) y establecer
-presencia disuasoria en las áreas protegidas.
+a pie, en vehículo o a caballo \cite{ecologiamisiones2026patrullaje}. Estos 
+recorridos permiten detectar indicios de actividad ilícita (campamentos, trampas,
+rastros de tala) y establecer presencia disuasoria en las áreas protegidas.
 
 Sin embargo, la efectividad de los patrullajes está limitada por factores
 logísticos: la densidad de la vegetación restringe la visibilidad, los
@@ -834,17 +836,17 @@ semanas ---típico de las \glspl{camara-trampa} tradicionales--- a minutos.
 \section{Objetivos específicos}
 
 \begin{enumerate}
-	\item \textbf{Diseñar e implementar un nodo de cámara autónomo} basado en
+	\item \textbf{Diseñar y construir un nodo de cámara trampa autónomo} basado en
 	      microcontroladores \gls{ESP32}, capaz de capturar imágenes mediante
 	      activación por sensor \gls{pir} y transmitirlas a través de una red
 	      \gls{mesh}.
 
-	\item \textbf{Desarrollar una red mesh autoorganizada} utilizando el
+	\item \textbf{Implementar una red mesh autoorganizada} utilizando el
           protocolo \gls{ESP-MESH-LITE}, que permita extender la conectividad en
           áreas sin cobertura celular mediante el encadenamiento de nodos
           intermedios.
 
-	\item \textbf{Implementar un servidor de procesamiento} capaz de recibir
+	\item \textbf{Desarrollar un servidor de procesamiento} capaz de recibir
 	      las imágenes transmitidas por la red, clasificarlas automáticamente
 	      mediante modelos de \gls{ia} preentrenados, y generar notificaciones
 	      ante la detección de eventos de interés.
@@ -959,9 +961,13 @@ de varios órdenes de magnitud que habilita respuestas operativas antes imposibl
 
 \begin{description}
 	\item[Rango de comunicación:] El alcance de cada nodo \gls{mesh} depende
-	      de las condiciones del terreno y la vegetación. En zonas de selva
-	      densa, puede ser necesario un mayor número de nodos intermedios para
-	      cubrir distancias equivalentes a las alcanzables en campo abierto.
+	      de las condiciones del terreno y la vegetación. Asimismo, la elección
+	      de hardware económico con antenas integradas de ganancia limitada
+	      restringe el rango efectivo de comunicación, situándolo por debajo de
+	      los máximos teóricos permitidos por los protocolos inalámbricos. En
+	      zonas de selva densa, estas limitaciones pueden requerir un mayor
+	      número de nodos intermedios para cubrir distancias equivalentes a las
+	      alcanzables en campo abierto.
 
 	\item[Ancho de banda:] La transmisión de imágenes a través de la red
 	      \gls{mesh} consume ancho de banda significativo. Capturas simultáneas
