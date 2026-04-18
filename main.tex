@@ -2415,16 +2415,13 @@ El software se desplegó con la siguiente configuración:
   \item \Gls{telegram-bot} configurado para notificaciones
 \end{itemize}
 
-% TODO: Agregar screenshot del docker-compose corriendo
-\begin{figure}[htbp]
-  \centering
-  % \includegraphics[width=\textwidth]{figures/docker-compose-running.png}
-  \fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}
-      [Screenshot de docker-compose ps mostrando servicios activos]
-  \vspace{2cm}}}
-  \caption{Servicios del servidor ejecutándose mediante Docker Compose.}
-  \label{fig:docker-compose-running}
-\end{figure}
+\begin{lstlisting}[caption={Estadísticas de contenedores Docker corriendo.}, label=lst:docker-stats, numbers=none, emphstyle=\bfseries, basicstyle=\ttfamily]
+NAME                        CPU %     MEM USAGE  MEM %     PIDS
+server-project-bot          0.00%     21.93MiB   0.14%     3
+server-project-web          0.40%     56.11MiB   0.36%     4
+server-project-db           6.07%     20.51MiB   0.13%     6
+server-project-speciesnet   0.33%     69.67MiB   0.44%     1
+\end{lstlisting}
 
 \section{Pruebas de laboratorio}
 
