@@ -2427,16 +2427,13 @@ El software se desplegó con la siguiente configuración:
 	\item \Gls{telegram-bot} configurado para notificaciones
 \end{itemize}
 
-% TODO: Agregar screenshot del docker-compose corriendo
-\begin{figure}[htbp]
-	\centering
-	% \includegraphics[width=\textwidth]{figures/docker-compose-running.png}
-	\fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}
-	[Screenshot de docker-compose ps mostrando servicios activos]
-	\vspace{2cm}}}
-	\caption{Servicios del servidor ejecutándose mediante Docker Compose.}
-	\label{fig:docker-compose-running}
-\end{figure}
+\begin{lstlisting}[caption={Servicios del servidor ejecutándose mediante Docker Compose.}, label=lst:docker-compose-running]
+NAME                                   CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
+server-capstone-project-bot-1          0.00%     21.93MiB / 15.38GiB   0.14%     402kB / 320kB     12.7MB / 42.4MB   3
+server-capstone-project-web-1          0.40%     56.11MiB / 15.38GiB   0.36%     69.8kB / 1.21MB   26.7MB / 57.8MB   4
+server-capstone-project-db-1           6.07%     20.51MiB / 15.38GiB   0.13%     45.1kB / 63kB     26.6MB / 5.93MB   6
+server-capstone-project-speciesnet-1   0.33%     69.67MiB / 15.38GiB   0.44%     16.6kB / 126B     713MB / 1.86GB    1
+\end{lstlisting}
 
 \section{Pruebas de laboratorio}
 
