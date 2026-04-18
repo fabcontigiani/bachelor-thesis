@@ -2218,18 +2218,38 @@ Para optimizar el uso de los recursos del motor relacional, en la base de datos 
 
 \subsection{Bot de Telegram y sistema de alertas}
 
-El sistema de notificaciones se implementa a través de un bot de la plataforma Telegram, empleando la librería \texttt{python-telegram-bot}. Este componente opera de manera asíncrona tras finalizar el procesamiento de cada imagen. Cuando el sistema clasifica objetos de interés que superan el nivel de confianza prestablecido, el bot genera y transmite la alerta correspondiente.
+El componente de interacción con el usuario final se materializa a través de un bot en la plataforma Telegram, desarrollado mediante la librería \texttt{python-telegram-bot}. Dada la naturaleza de los datos y los tiempos de procesamiento de los modelos de inteligencia artificial, la arquitectura del bot se diseñó bajo un paradigma asíncrono, garantizando la no interrupción de los procesos concurrentes del servidor principal.
 
-Cada notificación enviada por el bot estructura la información de la siguiente manera:
+La interacción con el usuario se estructura en tres capacidades funcionales:
+
+\subsubsection{Suscripción y gestión de usuarios}
+
+Para que el servidor pueda emitir notificaciones focalizadas, se requiere un proceso previo de emparejamiento. Mediante el comando de inicialización \texttt{/start}, el bot registra al usuario en la base de datos relacional, almacenando su identificador de chat (\textit{chat ID}) y sus datos de perfil. Este registro permite al sistema identificar inequívocamente a los destinatarios autorizados para recibir las alertas automáticas de seguridad.
+
+\subsubsection{Emisión automatizada de alertas proactivas}
+
+El núcleo del sistema de notificaciones radica en su capacidad de alerta autónoma. Al finalizar la etapa de inferencia de cada captura, un filtro lógico evalúa los resultados arrojados por el modelo. Si los objetos clasificados superan el umbral de confianza prestablecido, el bot compone y transmite de manera inmediata una alerta a los usuarios suscritos.
+
+Cada notificación consolida la evidencia empírica en un único paquete (\textit{Media Group}), estructurado de la siguiente manera:
 
 \begin{itemize}
-	\item La imagen original en alta definición capturada por el nodo de la red mesh.
-	\item La imagen anotada evidenciando las \glspl{bounding-box} de cada una de las detecciones realizadas por \gls{speciesnet}.
-	\item Un resumen textual con la cantidad total de objetos detectados y sus respectivas métricas de confianza porcentual.
-	\item Las principales etiquetas de clasificación taxonómica (top 5), en caso de tratarse de especies de fauna, organizadas de mayor a menor confianza.
+	\item La fotografía original en alta definición capturada por el nodo sensor de la red.
+	\item Una copia gráfica de la imagen que incluye trazadas las \glspl{bounding-box} de cada una de las detecciones generadas por \gls{speciesnet}.
+	\item Un desglose textual que detalla la cantidad de objetos detectados y sus métricas probabilísticas de confianza.
+	\item Las cinco principales etiquetas de clasificación taxonómica (\textit{top 5}) asociadas a la predicción, organizadas en orden decreciente de certeza.
 \end{itemize}
 
-El bot cuenta con comandos como \texttt{/last} que permiten a los usuarios consultar interactivamente la información y los análisis del último evento registrado por el servidor.
+\subsubsection{Consultas interactivas bajo demanda}
+
+De manera complementaria al flujo de alertas automáticas, el sistema proporciona comandos de interacción manual. Mediante el uso del comando \texttt{/last}, el bot realiza una consulta a la base de datos para recuperar la fotografía más reciente ingresada al servidor, independientemente de si las clasificaciones superaron o no el filtro de notificaciones. Esta funcionalidad facilita a los operadores la realización de auditorías y la monitorización operativa de la red en tiempo real.
+
+\subsubsection{Retroalimentación interactiva y corrección manual (\textit{Human-in-the-loop})}
+
+Para refinar la precisión del sistema y mitigar posibles falsos positivos, el bot incorpora un mecanismo de retroalimentación interactiva directamente en los mensajes de alerta. A través de teclados integrados (\textit{inline keyboards}), los operadores pueden confirmar o rechazar la clasificación taxonómica inicial provista por el modelo de IA.
+
+En caso de identificar una clasificación incorrecta, el sistema despliega dinámicamente un menú de selección múltiple presentando las especies alternativas sugeridas por la inferencia. Al confirmar la corrección, el bot actualiza el registro correspondiente en la base de datos, persistiendo la nueva etiqueta taxonómica y marcando el evento como auditado manualmente. 
+
+Esta integración del usuario en el ciclo de vida del procesamiento (\textit{Human-in-the-loop}) trasciende la simple corrección de errores en tiempo real y dota al sistema de una ventaja estratégica fundamental: la generación orgánica de un conjunto de datos altamente curado y etiquetado con precisión (\textit{Ground Truth}). Al acumular un volumen significativo de imágenes validadas correspondientes a la fauna endémica local —capturadas bajo las condiciones lumínicas reales y los ángulos específicos de las cámaras instaladas en terreno— se abre la posibilidad directa de aplicar técnicas de \textit{fine-tuning} (ajuste fino) o \textit{transfer learning} (transferencia de aprendizaje). De este modo, los modelos preentrenados genéricos pueden ser reentrenados y especializados iterativamente, logrando un sistema de inteligencia artificial que evoluciona y mejora de manera continua su capacidad de detección para el ecosistema particular de despliegue.
 
 \subsection{Base de datos PostgreSQL}
 
