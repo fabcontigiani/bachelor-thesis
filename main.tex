@@ -2146,110 +2146,113 @@ Como ilustra la Figura~\ref{fig:pipeline-speciesnet}, el pipeline de procesamien
 
 \section{Servidor de aplicación (server)}
 
-\subsection{Arquitectura Django}
+El servidor de aplicación actúa como el núcleo central del sistema, coordinando la recepción de imágenes, el procesamiento de las mismas mediante algoritmos de inteligencia artificial y la emisión de alertas. Este componente fue desarrollado utilizando el \textit{framework} web \gls{django} (versión 5.2) sobre el lenguaje Python (versión 3.13), estructurando así la lógica principal del \textit{software}.
 
-El servidor de aplicación se desarrolló utilizando \gls{django}, implementando:
+\subsection{Arquitectura del procesamiento}
+
+La arquitectura del servidor implementa los siguientes componentes clave:
 
 \begin{itemize}
-	\item \Gls{endpoint} HTTP para recepción de imágenes desde los nodos de cámara
-	\item Integración con el servicio de detección vía HTTP REST
-	\item Almacenamiento de imágenes y metadatos en base de datos
-	\item Bot de Telegram para notificaciones automáticas ante detecciones
-	\item Interfaz web para visualización y monitoreo de las últimas imágenes
-	recibidas
+	\item \textbf{\Gls{endpoint} HTTP:} para la recepción asíncrona de imágenes provenientes de los nodos de cámara dentro de la red mesh.
+	\item \textbf{Integración IA:} comunicación vía HTTP REST con el servicio local de inferencia de \gls{speciesnet}.
+	\item \textbf{Persistencia:} almacenamiento estructurado de imágenes y metadatos en una base de datos \gls{postgresql} (versión 15).
+	\item \textbf{Sistema de notificaciones:} integración con un bot de Telegram, implementado mediante la librería \texttt{python-telegram-bot}, para la emisión automatizada de alertas.
+	\item \textbf{Interfaz web de gestión:} panel administrativo y de monitoreo para la visualización en tiempo real de las últimas imágenes recibidas y procesadas.
 \end{itemize}
 
 El flujo de procesamiento en el servidor opera de la siguiente manera:
 
 \begin{enumerate}
-	\item El \gls{endpoint} HTTP recibe la imagen enviada por un nodo de cámara.
-	\item La imagen se almacena en el sistema de archivos y se registra en la
-	base de datos junto con sus metadatos (nodo de origen, timestamp).
-	\item Se envía la imagen al servicio de inferencia (\gls{speciesnet}) mediante
-	una petición HTTP interna.
-	\item El servicio retorna las detecciones (categorías, confianzas,
-	\glspl{bounding-box}) y clasificaciones taxonómicas.
-	\item Los resultados se almacenan en la base de datos y se genera una imagen
-	anotada con las \glspl{bounding-box}.
-	\item Si alguna detección supera el umbral de confianza configurado, el bot
-	de Telegram envía una notificación al usuario con la imagen original,
-	la imagen anotada y la información de las detecciones.
+	\item El \gls{endpoint} HTTP recibe una imagen enviada por un nodo de cámara a través de la red de comunicaciones.
+	\item La imagen recibida se almacena en el sistema de archivos del servidor. De manera simultánea, se registra su entrada en la base de datos junto con los metadatos asociados (tales como el identificador del nodo de origen y el \textit{timestamp} de captura).
+	\item Inmediatamente después del registro, la imagen se envía al servicio de inferencia de IA (\gls{speciesnet}) mediante una petición HTTP interna.
+	\item El servicio de inferencia analiza la imagen mediante su modelo subyacente (basado en YOLOv5) y retorna las detecciones encontradas (categorías detectadas como animales, humanos o vehículos, junto con sus valores de confianza y coordenadas de las \glspl{bounding-box}), así como las clasificaciones taxonómicas de las especies.
+	\item Los resultados de la inferencia se almacenan de manera relacional en la base de datos. Además, se recupera y guarda una copia procesada de la imagen que incluye las anotaciones gráficas de las \glspl{bounding-box}.
+	\item El sistema evalúa los resultados mediante un filtro de lógica de negocio. Si alguna de las detecciones supera el umbral de confianza previamente configurado y representa un objeto de interés, el bot de Telegram se encarga de enviar una notificación al usuario. Esta alerta incluye la imagen original, la imagen procesada y un resumen detallado de las detecciones y clasificaciones.
 \end{enumerate}
 
-La Figura~\ref{fig:diagrama-flujo-servidor} ilustra este flujo de procesamiento.
+La Figura~\ref{fig:diagrama-flujo-servidor} ilustra gráficamente este flujo de procesamiento integral.
 
 \begin{figure}[htbp]
-	\centering
-	% \includegraphics[width=0.8\textwidth]{figures/diagrama-flujo-servidor.png}
-	\fbox{\parbox{0.8\textwidth}{\centering\vspace{3cm}
-	[Diagrama de flujo del procesamiento de imágenes en el servidor]
-	\vspace{3cm}}}
+    \centering
+    \begin{tikzpicture}[
+        node distance=1.2cm and 2cm,
+        box/.style={rectangle, draw, rounded corners, fill=blue!10, text width=4cm, text centered, minimum height=1.5cm, font=\sffamily\small},
+        io/.style={trapezium, trapezium left angle=70, trapezium right angle=110, draw, fill=green!10, text width=3.5cm, text centered, minimum height=1.2cm, font=\sffamily\small},
+        process/.style={rectangle, draw, fill=orange!10, text width=4cm, text centered, minimum height=1.5cm, font=\sffamily\small},
+        decision/.style={diamond, draw, fill=red!10, text width=2.5cm, text badly centered, inner sep=0pt, font=\sffamily\small},
+        arrow/.style={thick, -Latex}
+    ]
+        \node [io] (receive) {Recepción de imagen (HTTP)};
+        \node [process, below=of receive] (store) {Almacenar en FS y registrar metadatos en BD};
+        \node [process, below=of store] (infer) {Inferencia \gls{speciesnet} (Detección y Clasificación)};
+        \node [process, below=of infer] (process_res) {Guardar resultados (BD) y procesar imagen anotada};
+        \node [decision, below=of process_res, yshift=-0.3cm] (threshold) {¿Supera umbral?};
+        \node [box, right=of threshold, xshift=1cm] (telegram) {Alerta vía Telegram bot};
+        \node [box, below=of threshold, yshift=-0.3cm] (end) {Fin del procesamiento};
+
+        \draw [arrow] (receive) -- (store);
+        \draw [arrow] (store) -- (infer);
+        \draw [arrow] (infer) -- (process_res);
+        \draw [arrow] (process_res) -- (threshold);
+        \draw [arrow] (threshold) -- node[anchor=south] {Sí} (telegram);
+        \draw [arrow] (threshold) -- node[anchor=east] {No} (end);
+        \draw [arrow] (telegram) |- (end);
+    \end{tikzpicture}
 	\caption{Diagrama de flujo del procesamiento de imágenes en el servidor.}
 	\label{fig:diagrama-flujo-servidor}
 \end{figure}
 
-La interfaz web proporciona una vista de monitoreo que muestra las últimas
-imágenes recibidas junto con sus resultados de detección. Esta interfaz fue
-desarrollada como herramienta auxiliar de desarrollo y depuración, y no forma
-parte del producto final del sistema de alertas.
+La interfaz web proporciona, a su vez, una vista de monitoreo que muestra las últimas imágenes recibidas junto con sus resultados de detección. Esta interfaz fue desarrollada como una herramienta auxiliar de desarrollo y depuración para visualizar las capacidades predictivas del modelo, y no forma parte de la vista principal que reciben los usuarios a través del sistema de alertas en Telegram.
 
 \subsection{Gestión de imágenes}
 
-Las imágenes se almacenan en un volumen \gls{docker} compartido:
+Las imágenes se administran y almacenan en un volumen compartido configurado en \gls{docker}, facilitando el acceso simultáneo desde distintos servicios. Se conservan dos variantes principales:
 
 \begin{itemize}
-	\item Imágenes originales recibidas desde los nodos
-	\item Imágenes anotadas con \glspl{bounding-box} generadas por el
-	servicio de detección
+	\item \textbf{Imágenes originales:} los archivos puros tal como son recibidos desde los nodos de cámara periféricos.
+	\item \textbf{Imágenes anotadas:} archivos procesados que incluyen gráficamente las \glspl{bounding-box} generadas por el servicio de detección, permitiendo una rápida verificación visual.
 \end{itemize}
 
-En la base de datos se almacenan únicamente los paths a las imágenes
-junto con los metadatos de detección.
+Para optimizar el uso de los recursos del motor relacional, en la base de datos se almacenan únicamente las rutas relativas (paths) a los archivos físicos de las imágenes, enlazadas con la totalidad de los metadatos de las detecciones, confianzas y clasificaciones.
 
 \subsection{Bot de Telegram y sistema de alertas}
 
-El sistema de alertas utiliza la librería \texttt{python-telegram-bot}
-para enviar notificaciones cuando se detectan objetos de interés con
-alto grado de confianza.
+El sistema de notificaciones se implementa a través de un bot de la plataforma Telegram, empleando la librería \texttt{python-telegram-bot}. Este componente opera de manera asíncrona tras finalizar el procesamiento de cada imagen. Cuando el sistema clasifica objetos de interés que superan el nivel de confianza prestablecido, el bot genera y transmite la alerta correspondiente.
 
-Cada notificación incluye:
+Cada notificación enviada por el bot estructura la información de la siguiente manera:
 
 \begin{itemize}
-	\item Imagen original capturada por el nodo
-	\item Imagen anotada con las \glspl{bounding-box} de las detecciones
-	\item Información sobre cantidad y confianza de las detecciones
-	\item Etiquetas de clasificación taxonómica de mayor confianza
+	\item La imagen original en alta definición capturada por el nodo de la red mesh.
+	\item La imagen anotada evidenciando las \glspl{bounding-box} de cada una de las detecciones realizadas por \gls{speciesnet}.
+	\item Un resumen textual con la cantidad total de objetos detectados y sus respectivas métricas de confianza porcentual.
+	\item Las principales etiquetas de clasificación taxonómica (top 5), en caso de tratarse de especies de fauna, organizadas de mayor a menor confianza.
 \end{itemize}
+
+El bot cuenta con comandos como \texttt{/last} que permiten a los usuarios consultar interactivamente la información y los análisis del último evento registrado por el servidor.
 
 \subsection{Base de datos PostgreSQL}
 
-La base de datos \gls{postgresql} almacena:
+La capa de persistencia se fundamenta en el sistema gestor de bases de datos relacionales \gls{postgresql} (versión 15), estructurado para almacenar los distintos registros operativos del servidor:
 
 \begin{itemize}
-	\item Registros de imágenes con paths y timestamps
-	\item Resultados de detección (clases, confianzas, coordenadas)
-	\item Clasificaciones taxonómicas
-	\item Configuración del sistema
+	\item \textbf{Registros fotográficos:} vínculos a los archivos físicos en el sistema de archivos junto a timestamps exactos.
+	\item \textbf{Resultados de IA:} extracción del JSON de respuesta de la API, incluyendo clases detectadas, porcentajes de confianza y coordenadas geoespaciales de las etiquetas.
+	\item \textbf{Taxonomía:} resultados detallados de la predicción de especies.
+	\item \textbf{Usuarios de Telegram:} registro de los IDs de los \textit{chats} que deben recibir las notificaciones push.
 \end{itemize}
 
 \subsection{Despliegue con Docker Compose}
 
-El servidor se despliega mediante \gls{docker-compose}, orquestando
-los siguientes servicios:
+Con el propósito de estandarizar el entorno de ejecución y asegurar su reproducibilidad, el servidor y sus dependencias se despliegan utilizando la herramienta de orquestación de contenedores \gls{docker-compose}. Esta configuración define e interconecta los siguientes servicios:
 
 \begin{itemize}
-	\item Contenedor de la aplicación \gls{django} (servidor de aplicación
-	y bot de Telegram)
-	\item Contenedor de \gls{postgresql} (base de datos)
-	\item Contenedor del servicio de detección con \gls{speciesnet}
-	(inferencia de IA)
+	\item \textbf{Contenedor \gls{django}:} que ejecuta de forma concurrente el servidor web (utilizando Gunicorn y trabajadores Uvicorn) para atender el \gls{endpoint} HTTP, así como un proceso secundario o \textit{polling} para la ejecución del bot de Telegram.
+	\item \textbf{Contenedor \gls{postgresql}:} servicio de base de datos aprovisionado de forma automatizada mediante variables de entorno y persistido con volúmenes locales.
+	\item \textbf{Contenedor \gls{speciesnet}:} un servicio pre-compilado e instanciado localmente que encapsula el modelo de inferencia de IA. Esto elimina la dependencia de servicios externos de Google, mejorando la latencia del sistema y los requisitos de conectividad.
 \end{itemize}
 
-Los contenedores se comunican a través de una red interna de Docker. El
-contenedor de la aplicación Django expone un puerto HTTP para recibir las
-imágenes desde la red mesh, y se comunica internamente con el servicio de
-detección y la base de datos. La Figura~\ref{fig:docker-compose-arquitectura}
-muestra la disposición de los contenedores y sus interacciones.
+Los contenedores se comunican a través de una red interna aislada, administrada por la plataforma Docker. El contenedor principal, correspondiente a la aplicación Django, expone los puertos necesarios hacia el exterior para permitir la recepción de fotografías desde la red mesh. A su vez, establece conexiones privadas e internas tanto con el servicio de base de datos como con la API RESTful de inferencia, alojada en su contenedor respectivo. La Figura~\ref{fig:docker-compose-arquitectura} presenta de manera esquemática la disposición de los contenedores y sus flujos de datos.
 
 \begin{figure}[htbp]
 	\centering
