@@ -1812,9 +1812,9 @@ Para el \textbf{Nodo Intermedio (Relay)}, el ciclo de vida (Figura~\ref{fig:diag
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.75\textwidth]{img/Diagramas Tesis-Gestión de Energia nodo Raley Parte 1.jpg}
-  
+
   \vspace{0.5cm}
-  
+
   \includegraphics[width=0.3\textwidth]{img/Diagramas Tesis-Gestión de Energia nodo Raley Parte 2.jpg}
   \caption{Diagrama de gestión de energía del nodo intermedio (Relay).}
   \label{fig:diagrama-energia-relay}
@@ -1825,9 +1825,9 @@ Para el \textbf{Nodo Hoja (Leaf)}, el flujo cambia drásticamente (Figura~\ref{f
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.7\textwidth]{img/Diagramas Tesis-Gestion de Energia nodo Leaf Parte 1.jpg}
-  
+
   \vspace{0.3cm}
-  
+
   \includegraphics[width=0.3\textwidth]{img/Diagramas Tesis-Gestion de Energia nodo Leaf Parte 2.jpg}
   \caption{Diagrama de gestión de energía del nodo terminal (Leaf).}
   \label{fig:diagrama-energia-leaf}
@@ -2224,12 +2224,13 @@ Esta integración del usuario en el ciclo de vida del procesamiento (\textit{Hum
 
 \subsection{Base de datos PostgreSQL}
 
-La capa de persistencia se fundamenta en el sistema gestor de bases de datos relacionales \gls{postgresql} (versión 15), estructurado para almacenar los distintos registros operativos del servidor:
+La persistencia de los datos se fundamenta en el sistema gestor de bases de datos relacionales \gls{postgresql} (versión 15), estructurado para almacenar los distintos registros operativos del servidor:
 
 \begin{itemize}
   \item \textbf{Registros fotográficos:} vínculos a los archivos físicos en el sistema de archivos junto a timestamps exactos.
-  \item \textbf{Resultados de IA:} extracción del JSON de respuesta de la API, incluyendo clases detectadas, porcentajes de confianza y coordenadas geoespaciales de las etiquetas.
+  \item \textbf{Resultados de IA:} extracción del JSON de respuesta de la API, incluyendo clases detectadas, porcentajes de confianza y coordenadas de las \glspl{bounding-box}.
   \item \textbf{Taxonomía:} resultados detallados de la predicción de especies.
+  \item \textbf{Auditoría y retroalimentación:} registro de las validaciones y correcciones manuales aportadas por los operadores a través del mecanismo \textit{Human-in-the-loop}, almacenando el estado de auditoría de cada evento y la etiqueta taxonómica definitiva.
   \item \textbf{Usuarios de Telegram:} registro de los IDs de los \textit{chats} que deben recibir las notificaciones push.
 \end{itemize}
 
