@@ -2485,7 +2485,7 @@ Se evaluó el pipeline de detección y clasificación con imágenes de prueba:
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.6\textwidth]{img/imagenProcesada.png}
-  \caption{Ejemplo de imagen procesada por el sistema de detección.}
+  \caption{Ejemplo de imagen procesada por el sistema de detección en entorno de laboratorio.}
   \label{fig:ejemplo-deteccion}
 \end{figure}
 
@@ -2502,7 +2502,7 @@ Se verificó el funcionamiento del bot de Telegram:
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.5\textwidth]{img/notificacionTelegram.png}
+  \includegraphics[width=0.3\textwidth]{img/notificacionTelegram.png}
   \caption{Notificación recibida en Telegram con resultados de detección.}
   \label{fig:telegram-notificacion}
 \end{figure}
@@ -2603,6 +2603,28 @@ Durante las pruebas de campo se registraron los siguientes resultados:
   \item Tiempo de operación sin fallos: [X] horas
 \end{itemize}
 
+Además de detectar animales, las pruebas de campo demostraron la eficacia del sistema como herramienta de seguridad y vigilancia perimetral. La Figura~\ref{fig:ejemplos-deteccion-campo} ilustra detecciones exitosas de intrusos y vehículos no autorizados en el predio.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{img/capturaIntrusoProcesada.png}
+    \caption{Detección de intrusos (personas).}
+    \label{fig:deteccion-intruso}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{img/capturaAutoProcesada.jpg}
+    \caption{Detección de vehículos.}
+    \label{fig:deteccion-auto}
+  \end{subfigure}
+  \caption{Versatilidad del modelo demostrada durante las pruebas de campo.}
+  \label{fig:ejemplos-deteccion-campo}
+\end{figure}
+
+\newpage
 \section{Métricas de rendimiento de red}
 
 \subsection{Latencia de transmisión}
