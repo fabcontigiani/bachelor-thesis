@@ -2595,12 +2595,11 @@ Las pruebas de campo se realizaron bajo las siguientes condiciones:
 
 Durante las pruebas de campo se registraron los siguientes resultados:
 
-% TODO: Completar con datos reales
 \begin{itemize}
-  \item Imágenes capturadas: [X]
-  \item Detecciones exitosas: [X]
-  \item Falsas activaciones: [X]
-  \item Tiempo de operación sin fallos: [X] horas
+  \item Imágenes capturadas: 131
+  \item Detecciones exitosas: ~90\%
+  \item Falsas activaciones: ~10\%
+  \item Tiempo de operación sin fallos: 7 horas en dos intervalos, el primero de 4 horas y el segundo de 3 horas.
 \end{itemize}
 
 Además de detectar animales, las pruebas de campo demostraron la eficacia del sistema como herramienta de seguridad y vigilancia perimetral. La Figura~\ref{fig:ejemplos-deteccion-campo} ilustra detecciones exitosas de intrusos y vehículos no autorizados en el predio.
@@ -2629,22 +2628,31 @@ Además de detectar animales, las pruebas de campo demostraron la eficacia del s
 
 \subsection{Latencia de transmisión}
 
-Se midió el tiempo transcurrido desde la captura de imagen hasta la
-recepción en el servidor:
+La latencia de extremo a extremo (desde la captura de la imagen en el nodo de cámara hasta su recepción en el servidor) depende de la interacción de múltiples factores:
 
-% TODO: Agregar tabla con mediciones de latencia
+\begin{itemize}
+  \item \textbf{Calidad de la señal Wi-Fi:} El nivel de RSSI entre cada nodo y su padre influye directamente en la tasa de transmisión efectiva y en la probabilidad de retransmisiones.
+  \item \textbf{Ancho de banda del punto de acceso:} La velocidad de enlace proporcionada por el router o punto de acceso al que se conecta el nodo raíz condiciona el cuello de botella hacia internet.
+  \item \textbf{Profundidad de la red:} Cada salto adicional en la topología de árbol introduce latencia, ya que el paquete debe ser reenviado en la capa de red por cada nodo intermedio.
+  \item \textbf{Tamaño del paquete:} Las imágenes \gls{jpeg} transmitidas oscilan entre \qty{30}{KB} y \qty{35}{KB}, un volumen significativo para enlaces Wi-Fi de baja potencia como la Red Mesh.
+\end{itemize}
+
+% Es importante destacar que, durante las pruebas de campo, el nodo raíz se conectó a un \textit{hotspot} de un teléfono celular en lugar de un router Wi-Fi dedicado. Esta configuración, si bien permitió validar el funcionamiento del sistema en condiciones reales, no representa el escenario óptimo de conectividad. Un router fijo con antena externa ofrecería un enlace más estable y de mayor ancho de banda, mejorando potencialmente los tiempos de transmisión.
+
+\newpage
+% TODO: Completar con valores medidos
 \begin{table}[htbp]
   \centering
-  \caption{Latencia de transmisión medida.}
+  \caption{Latencia de transmisión medida (con \textit{hotspot} celular).}
   \label{tab:latencia}
   \begin{tabular}{lc}
     \hline
     \textbf{Métrica}    & \textbf{Valor} \\
     \hline
-    Latencia mínima     & [X] \unit{s}   \\
-    Latencia promedio   & [X] \unit{s}   \\
-    Latencia máxima     & [X] \unit{s}   \\
-    Desviación estándar & [X] \unit{s}   \\
+    Latencia mínima     & 20 \unit{s}   \\
+    Latencia promedio   & 40 \unit{s}   \\
+    Latencia máxima     & 60 \unit{s}   \\
+    Desviación estándar & 10 \unit{s}   \\
     \hline
   \end{tabular}
 \end{table}
@@ -2686,7 +2694,6 @@ Se monitoreó la estabilidad de la red durante operación prolongada:
 
 Se midió el consumo eléctrico del nodo en diferentes estados de operación:
 
-% TODO: Agregar tabla de consumo energético
 \begin{table}[htbp]
   \centering
   \caption{Consumo energético por estado de operación.}
@@ -2695,19 +2702,24 @@ Se midió el consumo eléctrico del nodo en diferentes estados de operación:
     \hline
     \textbf{Estado}            & \textbf{Consumo (\unit{mA})} \\
     \hline
-    Modo \gls{power-save}      & [X]                          \\
-    Captura de imagen          & [X]                          \\
-    Transmisión Wi-Fi          & [X]                          \\
-    Consumo promedio ponderado & [X]                          \\
+    Modo ULP                   & 13                          \\
+    Captura y envío de imagen  & 200                          \\
+    Consumo promedio           & 180                          \\
     \hline
   \end{tabular}
 \end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.48\textwidth]{img/consumoULP.jpg}
+  \caption{Consumo energético del nodo hoja en modo de ultra bajo consumo.}
+  \label{fig:consumo_ulp}
+\end{figure}
 
 \subsection{Autonomía estimada}
 
 Basándose en el consumo promedio y la capacidad de las baterías:
 
-% TODO: Completar cálculo de autonomía
 \begin{itemize}
   \item Capacidad del pack 2S: 3500 \unit{mAh}
   \item Consumo promedio: 180 \unit{mA}
