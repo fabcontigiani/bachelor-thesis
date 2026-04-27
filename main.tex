@@ -2508,6 +2508,40 @@ Se verificó el funcionamiento del bot de Telegram:
 \end{figure}
 
 \newpage
+
+\subsection{Pruebas de retroalimentación interactiva (\textit{Human-in-the-loop})}
+
+Se evaluó el mecanismo de corrección manual integrado entre el bot de Telegram y el servidor web. Para ello, se partió de una clasificación inicial errónea generada por el modelo (Figura~\ref{fig:hitl-1}). A través de la interfaz del bot, el usuario indicó que la clasificación no era correcta (Figura~\ref{fig:hitl-2}) y seleccionó la etiqueta adecuada (\textit{human}) desde la lista de predicciones alternativas sugeridas (Figura~\ref{fig:hitl-3}). Una vez confirmada la selección, el sistema actualizó el registro en la base de datos, reflejando inmediatamente el resultado corregido y marcando el evento como auditado por el usuario en el panel de monitoreo web (Figura~\ref{fig:hitl-4}).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/clasificacionErroneaAntes.png}
+  \caption{Clasificación original errónea en el frontend.}
+  \label{fig:hitl-1}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/seleccionClasificacionErronea.png}
+  \caption{Notificación y validación en el bot de Telegram.}
+  \label{fig:hitl-2}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/seleccionHuman.png}
+  \caption{Selección de la etiqueta correcta por el usuario.}
+  \label{fig:hitl-3}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/clasificacionCorregida.png}
+  \caption{Resultado final actualizado en el frontend.}
+  \label{fig:hitl-4}
+\end{figure}
+
+\newpage
 \section{Pruebas de campo}
 
 \begin{figure}[htbp]
