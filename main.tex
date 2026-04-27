@@ -2349,19 +2349,13 @@ Esta dualidad en la arquitectura de energía permite combinar las fortalezas de 
 
 \section{Ambiente de pruebas}
 
-\subsection{Configuración del hardware}
+Para evaluar el desempeño operativo del sistema, se definió un entorno de pruebas diseñado para replicar las condiciones de un despliegue real. El mismo detalla puntualmente la configuración de hardware distribuido y la infraestructura de servidor empleadas.
 
-Las pruebas se realizaron utilizando la siguiente configuración de hardware:
+\subsection{Infraestructura de hardware}
 
-\begin{itemize}
-  \item 3 nodos de cámara (ESP32-CAM con sensor HC-SR501)
-  \item 1 nodo raíz (ESP32 DevKit V1)
-  \item Packs de \glspl{18650} en configuración 2S
-  \item Router Wi-Fi doméstico para conexión a internet
-  \item Servidor local con procesador multinúcleo para inferencia (sin GPU)
-    %   accesible mediante túnel VPN (Pangolin, basado en WireGuard) y proxy
-    %   reverso (Traefik)
-\end{itemize}
+Las pruebas se ejecutaron sobre una red compuesta por tres nodos de cámara, ensamblados a partir de módulos ESP32-CAM acoplados a sensores infrarrojos pasivos (PIR) modelo HC-SR501. La coordinación del tráfico inalámbrico recayó sobre un nodo raíz implementado con una placa ESP32 DevKit V1, conectado a un enrutador Wi-Fi doméstico para proporcionar acceso externo.
+
+Los dispositivos se energizaron utilizando paquetes de baterías \glspl{18650} en configuración 2S. Adicionalmente, el procesamiento se llevó a cabo en un servidor local provisto de un procesador multinúcleo, realizando las tareas de inferencia exclusivamente en la CPU, prescindiendo de aceleración gráfica dedicada (GPU).
 
 \begin{figure}[htbp]
   \centering
@@ -2377,17 +2371,11 @@ Las pruebas se realizaron utilizando la siguiente configuración de hardware:
   \label{fig:hardware-ensamblado}
 \end{figure}
 
-\subsection{Configuración del software}
+\subsection{Entorno de software y servicios}
 
-El software se desplegó con la siguiente configuración:
+A nivel de software, los dispositivos operaron con el firmware desarrollado sobre ESP-IDF (versión 5) y la biblioteca ESP-MESH-LITE.
 
-\begin{itemize}
-  \item Firmware compilado con ESP-IDF v5.x y ESP-MESH-LITE
-  \item Contenedores Docker ejecutándose en servidor Linux
-  \item Base de datos PostgreSQL
-  \item Servicio de inferencia con \gls{speciesnet} y LitServe
-  \item \Gls{telegram-bot} configurado para notificaciones
-\end{itemize}
+El backend se alojó en un entorno Linux, utilizando contenedores Docker para estandarizar la ejecución de los servicios. La configuración incluyó una base de datos PostgreSQL, el servicio de inferencia de \gls{speciesnet} servido mediante LitServe, y el \Gls{telegram-bot} encargado de gestionar las notificaciones para los usuarios.
 
 \begin{lstlisting}[caption={Estadísticas de contenedores Docker corriendo.}, label=lst:docker-stats, numbers=none, emphstyle=\bfseries, basicstyle=\ttfamily]
 NAME                        CPU %     MEM USAGE  MEM %     PIDS
