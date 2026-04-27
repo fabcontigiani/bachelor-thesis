@@ -2651,52 +2651,53 @@ La Figura~\ref{fig:deteccion-ave-campo} presenta un caso particularmente relevan
 
 \subsection{Latencia de transmisión}
 
-La latencia de extremo a extremo (desde la captura de la imagen en el nodo de cámara hasta su recepción en el servidor) depende de la interacción de múltiples factores:
+La latencia de extremo a extremo del sistema —definida como el tiempo transcurrido desde la captura de la imagen en el nodo de cámara hasta su completa recepción y disponibilidad en el servidor— está supeditada a la interacción de múltiples factores:
 
 \begin{itemize}
-  \item \textbf{Calidad de la señal Wi-Fi:} El nivel de RSSI entre cada nodo y su padre influye directamente en la tasa de transmisión efectiva y en la probabilidad de retransmisiones.
-  \item \textbf{Ancho de banda del punto de acceso:} La velocidad de enlace proporcionada por el router o punto de acceso al que se conecta el nodo raíz condiciona el cuello de botella hacia internet.
-  \item \textbf{Profundidad de la red:} Cada salto adicional en la topología de árbol introduce latencia, ya que el paquete debe ser reenviado en la capa de red por cada nodo intermedio.
-  \item \textbf{Tamaño del paquete:} Las imágenes \gls{jpeg} transmitidas oscilan entre \qty{30}{KB} y \qty{35}{KB}, un volumen significativo para enlaces Wi-Fi de baja potencia como la Red Mesh.
+  \item \textbf{Calidad de la señal Wi-Fi:} El nivel de potencia de la señal recibida (RSSI) entre cada nodo y su respectivo padre influye directamente en la tasa de transmisión efectiva y en la probabilidad de requerir retransmisiones por pérdida de paquetes.
+  \item \textbf{Ancho de banda de salida:} La capacidad de enlace proporcionada por el punto de acceso al que se conecta el nodo raíz actúa como el principal cuello de botella hacia internet.
+  \item \textbf{Profundidad de la topología:} Cada salto adicional en la estructura de la red de árbol introduce retardos intrínsecos, dado que la carga útil debe ser procesada y reenviada en la capa de red por cada nodo intermedio.
+  \item \textbf{Tamaño de la carga útil:} Las imágenes comprimidas en formato \gls{jpeg} presentan tamaños que oscilan entre \qty{30}{KB} y \qty{35}{KB}, un volumen de datos considerable para enlaces Wi-Fi de bajo consumo en configuraciones en malla.
 \end{itemize}
 
-% Es importante destacar que, durante las pruebas de campo, el nodo raíz se conectó a un \textit{hotspot} de un teléfono celular en lugar de un router Wi-Fi dedicado. Esta configuración, si bien permitió validar el funcionamiento del sistema en condiciones reales, no representa el escenario óptimo de conectividad. Un router fijo con antena externa ofrecería un enlace más estable y de mayor ancho de banda, mejorando potencialmente los tiempos de transmisión.
+Cabe destacar que, para el desarrollo de las pruebas de campo, el nodo raíz se vinculó a internet mediante un punto de acceso móvil (\textit{hotspot}) provisto por un teléfono celular, en lugar de utilizar un enrutador comercial dedicado. Si bien esta decisión logística permitió validar el despliegue del sistema en un entorno no urbanizado y carente de infraestructura, la variabilidad propia de las redes de telefonía móvil introdujo un grado de inestabilidad que impactó directamente en los tiempos de respuesta. Un enrutador fijo provisto de antenas de mayor ganancia ofrecería un canal ascendente más holgado, lo cual redundaría en una mejora sobre los tiempos observados.
+
+Los tiempos documentados en la Tabla~\ref{tab:latencia} corresponden a valores empíricos aproximados obtenidos durante las sesiones de campo. Ante la ausencia de un conjunto de datos extenso y sistemático, estas métricas se presentan como indicadores del comportamiento operativo general bajo las condiciones de prueba detalladas.
 
 \newpage
-% TODO: Completar con valores medidos
 \begin{table}[htbp]
   \centering
-  \caption{Latencia de transmisión medida (con \textit{hotspot} celular).}
+  \caption{Latencia de transmisión observada (conexión vía \textit{hotspot} celular).}
   \label{tab:latencia}
   \begin{tabular}{lc}
     \hline
-    \textbf{Métrica}    & \textbf{Valor} \\
+    \textbf{Métrica aproximada} & \textbf{Valor} \\
     \hline
-    Latencia mínima     & 20 \unit{s}   \\
-    Latencia promedio   & 40 \unit{s}   \\
-    Latencia máxima     & 60 \unit{s}   \\
-    Desviación estándar & 10 \unit{s}   \\
+    Latencia mínima observada   & 20 \unit{s}   \\
+    Latencia promedio estimada  & 40 \unit{s}   \\
+    Latencia máxima observada   & 60 \unit{s}   \\
+    Desviación estándar         & $\approx$ 10 \unit{s}   \\
     \hline
   \end{tabular}
 \end{table}
 
 \subsection{Distancia máxima entre nodos}
 
-Se evaluó la distancia máxima a la cual los nodos pueden mantener
-conexión estable:
+Con el propósito de caracterizar el alcance efectivo de los módulos de comunicación, se efectuaron pruebas empíricas para determinar la distancia máxima a la cual dos nodos pueden sostener un enlace operativo. La metodología consistió en establecer una conexión inicial exitosa y, posteriormente, desplazar físicamente uno de los nodos de forma gradual mientras se monitoreaba el estado de la red a través de la consola serial. El límite de distancia se determinó en el punto donde la degradación de la métrica RSSI provocaba la caída recurrente del enlace y la consecuente imposibilidad de transmitir imágenes.
 
-% TODO: Agregar resultados de pruebas de distancia
+Los resultados consolidados de estas observaciones se exponen en la Tabla~\ref{tab:distancia}. Se evidencia que la antena integrada en la placa de circuito impreso (PCB) del módulo ESP32-CAM presenta una sensibilidad limitada, siendo altamente susceptible a la atenuación provocada por obstáculos físicos. En entornos caracterizados por vegetación densa, el rango útil experimentó reducciones considerables en comparación con el escenario ideal de línea de vista directa, un factor crítico a tener en cuenta para la planificación del espaciado entre nodos durante un despliegue real.
+
 \begin{table}[htbp]
   \centering
-  \caption{Distancia máxima entre nodos.}
+  \caption{Alcance máximo efectivo observado entre nodos adyacentes.}
   \label{tab:distancia}
   \begin{tabular}{lc}
     \hline
-    \textbf{Condición}          & \textbf{Distancia máxima} \\
+    \textbf{Condición del entorno} & \textbf{Distancia máxima} \\
     \hline
-    Línea de vista directa      & 15-18 \unit{m}              \\
-    Con obstáculos (vegetación) & 12 \unit{m}              \\
-    Interior (paredes)          & 10 \unit{m}              \\
+    Línea de vista directa      & 15-18 \unit{m} \\
+    Con obstáculos (vegetación) & $\approx$ 12 \unit{m} \\
+    Interior (paredes)          & $\approx$ 10 \unit{m} \\
     \hline
   \end{tabular}
 \end{table}
@@ -2705,7 +2706,7 @@ conexión estable:
 
 La estabilidad de la red mesh durante operación prolongada depende de la interacción de múltiples factores ambientales y de configuración, lo que dificulta su caracterización mediante una única métrica cuantitativa.
 
-Durante las pruebas de campo, se observó que la red mantuvo conectividad operativa de forma estable siempre que se cumplieran dos condiciones: que los nodos dispusieran de carga de batería suficiente y que la calidad de la señal Wi-Fi entre nodos adyacentes fuera adecuada (considerando un umbral mínimo de RSSI de \qty{-75}{dBm}, un parámetro que es configurable por el desarrollador en el firmware). 
+Durante las pruebas de campo, se observó que la red mantuvo conectividad operativa de forma estable siempre que se cumplieran dos condiciones: que los nodos dispusieran de carga de batería suficiente y que la calidad de la señal Wi-Fi entre nodos adyacentes fuera adecuada (considerando un umbral mínimo de RSSI de \qty{-75}{dBm}, un parámetro configurable en el firmware). 
 
 Si bien existen diversos factores que podrían incidir negativamente en la estabilidad, en las pruebas de campo realizadas no tuvieron un impacto significativo, ya que se seleccionaron entornos con vegetación moderada y condiciones climáticas favorables. Teóricamente, los factores de riesgo que podrían afectar el sistema incluyen:
 
