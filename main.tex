@@ -2703,13 +2703,20 @@ conexión estable:
 
 \subsection{Estabilidad de la conexión}
 
-Se monitoreó la estabilidad de la red durante operación prolongada:
+La estabilidad de la red mesh durante operación prolongada depende de la interacción de múltiples factores ambientales y de configuración, lo que dificulta su caracterización mediante una única métrica cuantitativa.
+
+Durante las pruebas de campo, se observó que la red mantuvo conectividad operativa de forma estable siempre que se cumplieran dos condiciones: que los nodos dispusieran de carga de batería suficiente y que la calidad de la señal Wi-Fi entre nodos adyacentes fuera adecuada (RSSI superior a \qty{-75}{dBm}). Los principales factores que incidieron en la estabilidad fueron:
 
 \begin{itemize}
-  \item Número de reconexiones: [X]
-  \item Paquetes perdidos: [X]\unit{\percent}
-  \item Tiempo de reconexión promedio: [X] \unit{s}
+  \item \textbf{Calidad de señal entre nodos:} En condiciones de buena señal, las desconexiones espontáneas resultaron poco frecuentes. La vegetación densa y las condiciones climáticas adversas degradaron la señal en algunos casos, provocando reconexiones esporádicas.
+  \item \textbf{Agotamiento de batería:} Cuando la tensión del pack descendía por debajo del umbral funcional del regulador, el nodo se apagaba de forma definitiva y no se reincorporaba a la red hasta ser recargado manualmente.
+  \item \textbf{Saturación del punto de acceso:} En escenarios con múltiples dispositivos conectados al mismo router Wi-Fi, se observaron retardos adicionales en la transmisión de imágenes, aunque sin pérdida total de conectividad.
+  \item \textbf{Profundidad de la topología:} A mayor cantidad de saltos en la red de árbol, mayor la probabilidad de que una desconexión en un nodo intermedio afecte a los nodos descendientes.
 \end{itemize}
+
+El firmware implementa un mecanismo de verificación periódica de la tabla de ruteo con un intervalo configurado de \qty{60}{s}. Este ciclo determina el tiempo máximo que un nodo tarda en detectar la pérdida de su padre y comenzar el proceso de reasociación a un nodo alternativo, estableciendo así el tiempo de reconexión en el peor caso.
+
+En cuanto a la integridad de las imágenes transmitidas, la arquitectura basada en peticiones HTTP sobre TCP garantiza la entrega confiable a nivel de transporte. Las imágenes que llegaron al servidor se recibieron completas y sin corrupción. Los casos de pérdida correspondieron a situaciones donde el nodo no logró completar la transmisión (por desconexión de la red o agotamiento de batería durante el envío), resultando en imágenes que nunca fueron registradas por el servidor.
 
 \section{Métricas de consumo energético}
 
