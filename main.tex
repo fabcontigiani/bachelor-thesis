@@ -2422,33 +2422,6 @@ evaluando:
   \label{fig:ejemplo-captura}
 \end{figure}
 
-\subsection{Pruebas del sensor PIR}
-
-Se evaluó el funcionamiento del sensor HC-SR501:
-
-\begin{itemize}
-  \item Respuesta a movimiento de personas a diferentes distancias
-  \item Tiempo de respuesta desde detección hasta interrupción
-  \item Configuración óptima de sensibilidad y retardo
-  \item Tasa de falsas activaciones
-\end{itemize}
-
-% TODO: Agregar tabla con resultados de pruebas PIR
-\begin{table}[htbp]
-  \centering
-  \caption{Resultados de pruebas del sensor PIR.}
-  \label{tab:pruebas-pir}
-  \begin{tabular}{lc}
-    \hline
-    \textbf{Parámetro}            & \textbf{Valor} \\
-    \hline
-    Distancia máxima de detección & [X] \unit{m}   \\
-    Tiempo de respuesta promedio  & [X] \unit{ms}  \\
-    Falsas activaciones por hora  & [X]            \\
-    \hline
-  \end{tabular}
-\end{table}
-
 \subsection{Pruebas de transmisión mesh}
 
 Se verificó la transmisión de imágenes a través de la red \gls{mesh}:
@@ -2487,6 +2460,20 @@ Se evaluó el pipeline de detección y clasificación con imágenes de prueba:
   \includegraphics[width=0.6\textwidth]{img/imagenProcesada.png}
   \caption{Ejemplo de imagen procesada por el sistema de detección en entorno de laboratorio.}
   \label{fig:ejemplo-deteccion}
+\end{figure}
+
+\subsection{Pruebas del panel de monitoreo web}
+
+Se verificó el correcto funcionamiento del panel de monitoreo web, el cual permite visualizar las imágenes capturadas por los nodos de cámara, así como la información de detecciones y clasificaciones.
+
+\begin{figure}[htbp]
+  \centering
+  % \includegraphics[width=0.6\textwidth]{img/panelWeb.png}
+  \fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}
+      [Screenshot del panel de monitoreo web]
+  \vspace{2cm}}}
+  \caption{Panel de monitoreo web con imágenes capturadas por los nodos de cámara.}
+  \label{fig:panel-web}
 \end{figure}
 
 \subsection{Pruebas del sistema de alertas}
