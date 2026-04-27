@@ -2705,13 +2705,15 @@ conexión estable:
 
 La estabilidad de la red mesh durante operación prolongada depende de la interacción de múltiples factores ambientales y de configuración, lo que dificulta su caracterización mediante una única métrica cuantitativa.
 
-Durante las pruebas de campo, se observó que la red mantuvo conectividad operativa de forma estable siempre que se cumplieran dos condiciones: que los nodos dispusieran de carga de batería suficiente y que la calidad de la señal Wi-Fi entre nodos adyacentes fuera adecuada (RSSI superior a \qty{-75}{dBm}). Los principales factores que incidieron en la estabilidad fueron:
+Durante las pruebas de campo, se observó que la red mantuvo conectividad operativa de forma estable siempre que se cumplieran dos condiciones: que los nodos dispusieran de carga de batería suficiente y que la calidad de la señal Wi-Fi entre nodos adyacentes fuera adecuada (considerando un umbral mínimo de RSSI de \qty{-75}{dBm}, un parámetro que es configurable por el desarrollador en el firmware). 
+
+Si bien existen diversos factores que podrían incidir negativamente en la estabilidad, en las pruebas de campo realizadas no tuvieron un impacto significativo, ya que se seleccionaron entornos con vegetación moderada y condiciones climáticas favorables. Teóricamente, los factores de riesgo que podrían afectar el sistema incluyen:
 
 \begin{itemize}
-  \item \textbf{Calidad de señal entre nodos:} En condiciones de buena señal, las desconexiones espontáneas resultaron poco frecuentes. La vegetación densa y las condiciones climáticas adversas degradaron la señal en algunos casos, provocando reconexiones esporádicas.
-  \item \textbf{Agotamiento de batería:} Cuando la tensión del pack descendía por debajo del umbral funcional del regulador, el nodo se apagaba de forma definitiva y no se reincorporaba a la red hasta ser recargado manualmente.
-  \item \textbf{Saturación del punto de acceso:} En escenarios con múltiples dispositivos conectados al mismo router Wi-Fi, se observaron retardos adicionales en la transmisión de imágenes, aunque sin pérdida total de conectividad.
-  \item \textbf{Profundidad de la topología:} A mayor cantidad de saltos en la red de árbol, mayor la probabilidad de que una desconexión en un nodo intermedio afecte a los nodos descendientes.
+  \item \textbf{Calidad de señal entre nodos:} La vegetación muy densa y las condiciones climáticas adversas pueden degradar la señal y provocar reconexiones esporádicas. En nuestras pruebas, al contar con ubicaciones favorables, las desconexiones espontáneas resultaron prácticamente nulas.
+  \item \textbf{Agotamiento de batería:} Constituye el principal motivo de interrupción. Cuando la tensión del pack desciende por debajo del umbral funcional del regulador, el nodo se apaga de forma definitiva y no se reincorpora a la red hasta ser recargado manualmente.
+  \item \textbf{Saturación del punto de acceso:} En escenarios con alta concurrencia de dispositivos conectados al mismo router Wi-Fi, se podrían presentar retardos adicionales en la transmisión de imágenes.
+  \item \textbf{Profundidad de la topología:} A mayor cantidad de saltos en la red de árbol, mayor es la probabilidad de que una desconexión en un nodo intermedio afecte a los nodos descendientes.
 \end{itemize}
 
 El firmware implementa un mecanismo de verificación periódica de la tabla de ruteo con un intervalo configurado de \qty{60}{s}. Este ciclo determina el tiempo máximo que un nodo tarda en detectar la pérdida de su padre y comenzar el proceso de reasociación a un nodo alternativo, estableciendo así el tiempo de reconexión en el peor caso.
@@ -2912,6 +2914,18 @@ líneas de trabajo futuro:
   \item[Interfaz de usuario:] Desarrollar una interfaz web más completa
     que permita visualización en mapa, gestión de múltiples despliegues
     y generación de reportes automatizados.
+
+  \item[Actualización de firmware por OTA:] Implementar un mecanismo de
+    actualización de firmware inalámbrica (\textit{Over-The-Air}) que
+    permita desplegar nuevas versiones del software en los nodos de
+    cámara sin necesidad de recolectarlos físicamente. El ESP32 soporta
+    nativamente esta funcionalidad a través de su partición de OTA,
+    y existen librerías como ElegantOTA que simplifican su integración.
+    Esta mejora resulta especialmente relevante en despliegues de campo
+    donde el acceso físico a los nodos es costoso o logísticamente
+    complejo, aunque requiere como prerequisito que los nodos cuenten
+    con autonomía energética suficiente y conectividad activa al momento
+    de la actualización.
 \end{description}
 
 \section{Recomendaciones}
