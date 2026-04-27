@@ -2393,15 +2393,7 @@ antes de la integración.
 
 \subsection{Pruebas de captura de imagen}
 
-Se verificó la correcta captura de imágenes por parte del módulo OV2640,
-evaluando:
-
-\begin{itemize}
-  \item Inicialización correcta de la cámara
-  \item Calidad de imagen a diferentes niveles de compresión
-  \item Tamaño de archivo resultante $\approx$ 30-35 KB para resolución 640x480
-  \item Tiempo de captura y compresión
-\end{itemize}
+Se verificó la correcta captura de imágenes por parte del módulo OV2640, evaluando la inicialización adecuada de la cámara y la calidad fotográfica a diferentes niveles de compresión. Se determinó que el tamaño de archivo resultante oscila entre \qty{30}{KB} y \qty{35}{KB} para una resolución de $640\times480$ píxeles, analizando a su vez el tiempo necesario para completar el ciclo de captura y compresión en hardware.
 
 \begin{figure}[htbp]
   \centering
@@ -2412,14 +2404,7 @@ evaluando:
 
 \subsection{Pruebas de transmisión mesh}
 
-Se verificó la transmisión de imágenes a través de la red \gls{mesh}:
-
-\begin{itemize}
-  \item Establecimiento de conexión entre nodos
-  \item Transmisión exitosa de imágenes completas
-  \item Tiempo de transmisión desde nodo hasta servidor
-  \item Comportamiento ante pérdida de conexión
-\end{itemize}
+Se verificó la transmisión de imágenes a través de la red \gls{mesh}, comprobando el establecimiento inicial de la conexión entre nodos y la transferencia exitosa de las cargas útiles completas. Adicionalmente, se evaluó el tiempo de transmisión desde el nodo origen hasta el servidor y se observó el comportamiento del mecanismo de recuperación ante pérdidas de conectividad temporales.
 
 % TODO: Agregar screenshot del log de transmisión
 \begin{figure}[htbp]
@@ -2434,14 +2419,7 @@ Se verificó la transmisión de imágenes a través de la red \gls{mesh}:
 
 \subsection{Pruebas del sistema de clasificación}
 
-Se evaluó el pipeline de detección y clasificación con imágenes de prueba:
-
-\begin{itemize}
-  \item Detección correcta de animales, personas y vehículos
-  \item Precisión de las \glspl{bounding-box}
-  \item \Gls{clasificacion-taxonomica} de animales detectados
-  \item Tiempo de inferencia por imagen
-\end{itemize}
+Se evaluó el pipeline de detección y clasificación utilizando imágenes de prueba, verificando la capacidad del modelo para identificar correctamente animales, personas y vehículos. Durante este proceso se comprobó la precisión gráfica de las \glspl{bounding-box}, la exactitud en la \gls{clasificacion-taxonomica} de la fauna detectada y el tiempo de inferencia requerido para procesar cada captura.
 
 \begin{figure}[htbp]
   \centering
