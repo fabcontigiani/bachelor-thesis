@@ -2740,7 +2740,7 @@ Los resultados consolidados de estas observaciones se exponen en la Tabla~\ref{t
 
 La estabilidad de la red mesh durante operación prolongada depende de la interacción de múltiples factores ambientales y de configuración, lo que dificulta su caracterización mediante una única métrica cuantitativa.
 
-Durante las pruebas de campo, se observó que la red mantuvo conectividad operativa de forma estable siempre que se cumplieran dos condiciones: que los nodos dispusieran de carga de batería suficiente y que la calidad de la señal Wi-Fi entre nodos adyacentes fuera adecuada (considerando un umbral mínimo de RSSI de \qty{-75}{dBm}, un parámetro configurable en el firmware). 
+Durante las pruebas de campo, se observó que la red mantuvo conectividad operativa de forma estable siempre que se cumplieran dos condiciones: que los nodos dispusieran de carga de batería suficiente y que la calidad de la señal Wi-Fi entre nodos adyacentes fuera adecuada (considerando un umbral mínimo de RSSI de \qty{-75}{dBm}, un parámetro configurable en el firmware).
 
 Si bien existen diversos factores que podrían incidir negativamente en la estabilidad, en las pruebas de campo realizadas no tuvieron un impacto significativo, ya que se seleccionaron entornos con vegetación moderada y condiciones climáticas favorables. Teóricamente, los factores de riesgo que podrían afectar el sistema incluyen:
 
@@ -2832,7 +2832,6 @@ Durante las pruebas se identificaron las siguientes limitaciones:
   \item \textbf{Brownout por agotamiento de batería:} Cuando la tensión del pack 2S desciende por debajo de \qtyrange{6}{7}{V}, el regulador LM2596 no puede compensar los picos de corriente del módulo Wi-Fi, provocando reinicios por \textit{brownout} que interrumpen la operación del nodo.
   \item \textbf{Ausencia de visión nocturna:} El sensor OV2640 no cuenta con iluminación infrarroja, limitando la captura de imágenes útiles a condiciones de luz diurna o crepuscular.
 \end{itemize}
-
 
 % ==============================================================================
 % Capítulo 9: Conclusiones
@@ -3174,11 +3173,10 @@ deben configurar:
 \subsection{Compilación y grabación}
 
 Una vez configurados los parámetros, el firmware se compila y graba
-utilizando los siguientes comandos:
+utilizando el siguiente comando:
 
 \begin{lstlisting}[language=bash, caption={Comandos para compilar y grabar el firmware.}]
-  # Borrar flash y grabar firmware
-  idf.py erase_flash flash monitor -b \num{921600} -p /dev/ttyUSB0
+  idf.py erase_flash flash monitor -b 921600 -p /dev/ttyUSB0
 \end{lstlisting}
 
 Es recomendable grabar primero el nodo raíz y verificar su conexión al
