@@ -900,6 +900,7 @@ aspectos:
 \end{itemize}
 
 \section{Limitaciones}
+\label{sec:limitaciones}
 
 Es importante explicitar las limitaciones técnicas inherentes al prototipo
 desarrollado, tanto para establecer expectativas adecuadas como para orientar
@@ -920,17 +921,23 @@ trabajos futuros.
     autonomía.
 
   \item[Sensor de movimiento:] Se utiliza un sensor \gls{pir} domótico
-    convencional, cuyas características de detección están optimizadas
-    para uso en interiores. Esto implica que el sistema es capaz de
-    detectar confiablemente animales de gran porte (tapires, yaguaretés,
-    ciervos) y personas, pero puede no activarse consistentemente ante
-    fauna de menor tamaño como aves o pequeños mamíferos.
+    convencional (HC-SR501), cuyas características de detección están
+    optimizadas para uso en interiores. Si bien esto podría limitar la
+    detección de fauna de menor tamaño, la alta sensibilidad del sensor
+    conlleva también un riesgo de falsos positivos elevado, especialmente
+    en entornos exteriores con variaciones térmicas ambientales.
 
-  \item[Operación diurna:] El módulo de cámara utilizado incorpora un lente
-    con filtro \gls{ir}, lo que limita su operación a condiciones de
-    luz diurna. A diferencia de las cámaras trampa comerciales que
-    incluyen iluminación infrarroja para capturas nocturnas, el prototipo
-    desarrollado no cuenta con esta capacidad.
+  \item[Operación diurna:] El módulo de cámara OV2640 incorpora un filtro
+    de corte infrarrojo en su lente, el cual bloquea las longitudes de onda
+    infrarrojas para optimizar la reproducción cromática en condiciones de
+    luz visible. Esto imposibilita el uso de LEDs infrarrojos como fuente
+    de iluminación para visión nocturna sin antes remover físicamente dicho
+    filtro, un procedimiento que conlleva riesgo de daño al sensor y que
+    degrada irreversiblemente la calidad de imagen diurna. A diferencia de
+    las cámaras trampa comerciales que incorporan sensores sin filtro
+    \gls{ir} junto con iluminación infrarroja dedicada para capturas
+    nocturnas, el prototipo desarrollado queda limitado a condiciones de
+    luz diurna o visible.
 
   \item[Resolución de imagen:] La resolución efectiva del prototipo está
     limitada principalmente por las capacidades del sensor OV2640 y el
@@ -2829,13 +2836,13 @@ análisis de los principales hallazgos:
 
 \subsection{Limitaciones observadas}
 
-Durante las pruebas se identificaron las siguientes limitaciones:
+Las pruebas de campo confirmaron las limitaciones técnicas anticipadas en la Sección~\ref{sec:limitaciones}. En particular, se verificó en la práctica lo siguiente:
 
 \begin{itemize}
-  \item \textbf{Sensor PIR domótico:} El HC-SR501 está optimizado para la detección de personas. Su sensibilidad puede ser insuficiente para fauna de menor porte o animales de sangre fría, lo que podría generar falsos negativos en escenarios de monitoreo biológico puro.
-  \item \textbf{Alcance limitado por antena integrada:} La antena PCB del módulo ESP32-CAM restringe el rango efectivo de comunicación. En vegetación densa, las distancias se reducen considerablemente, requiriendo mayor densidad de nodos intermedios.
-  \item \textbf{Brownout por agotamiento de batería:} Cuando la tensión del pack 2S desciende por debajo de \qtyrange{6}{7}{V}, el regulador LM2596 no puede compensar los picos de corriente del módulo Wi-Fi, provocando reinicios por \textit{brownout} que interrumpen la operación del nodo.
-  \item \textbf{Ausencia de visión nocturna:} El sensor OV2640 no cuenta con iluminación infrarroja, limitando la captura de imágenes útiles a condiciones de luz diurna o crepuscular.
+  \item El sensor PIR domótico HC-SR501 superó las expectativas iniciales, logrando detectar fauna de pequeño porte como aves que transitaban en las proximidades de la cámara. No obstante, la alta sensibilidad del sensor se tradujo en un número considerable de falsos positivos, generando capturas sin presencia real de fauna o personas en el encuadre.
+  \item El alcance efectivo de la antena PCB integrada se redujo considerablemente en presencia de vegetación, requiriendo distancias entre nodos inferiores a las teóricamente posibles.
+  \item Se observaron reinicios por \textit{brownout} cuando la tensión del pack 2S descendió por debajo de \qtyrange{6}{7}{V}, confirmando la insuficiencia del margen de tensión del regulador LM2596 frente a los picos de corriente del módulo Wi-Fi.
+  \item La operación del sistema quedó efectivamente restringida a condiciones de luz diurna o visible, dado el filtro de corte infrarrojo presente en el lente del módulo OV2640.
 \end{itemize}
 
 % ==============================================================================
