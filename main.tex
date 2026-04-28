@@ -2409,17 +2409,42 @@ Se verificó la correcta captura de imágenes por parte del módulo OV2640, eval
   \label{fig:ejemplo-captura}
 \end{figure}
 
+\subsection{Pruebas de conexión a la red mesh}
+
+Se verificó el proceso de asociación de nuevos nodos a la topología de la red mediante el registro de eventos en la consola serial. El Listado~\ref{lst:log-conexion} ilustra la secuencia cuando un nuevo nodo de cámara se asocia exitosamente al nodo raíz. Como se observa en el extracto, el nodo ingresa a la red (identificado con la dirección MAC \texttt{44:1d:64:f3:c2:70}), recibe una dirección IP (\texttt{192.168.5.2}) provista por el servidor DHCP interno y, subsecuentemente, el nodo raíz actualiza su estado interno reflejando el incremento en su contador de nodos hijos directos.
+
+\begin{lstlisting}[caption={Registro de consola mostrando la conexión de un nuevo nodo a la red mesh.}, label=lst:log-conexion, numbers=none, basicstyle=\ttfamily\scriptsize]
+I (31313) root_node: ========================
+I (41297) root_node: === ROOT NODE STATUS ===
+I (41297) root_node: Channel: 2 | Level: 1 (root)
+I (41298) root_node: Self MAC: 00:70:07:25:c3:b8
+I (41299) root_node: Router BSSID: 48:96:d9:70:a9:4a | RSSI: -36 dBm
+I (41305) root_node: Direct children: 0
+I (41309) root_node: Free heap: 199396 bytes
+I (41313) root_node: ========================
+I (43157) wifi:new:<2,1>, old:<2,1>, ap:<2,1>, sta:<2,1>, prof:1, snd_ch_cfg:0x0
+I (43158) wifi:station: 44:1d:64:f3:c2:70 join, AID=1, bgn, 40U
+I (43190) bridge_wifi: STA Connecting to the AP again...
+I (43243) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.5.2
+I (44340) wifi:<ba-add>idx:2 (ifx:1, 44:1d:64:f3:c2:70), tid:0, ssn:0, winSize:64
+I (51297) root_node: === ROOT NODE STATUS ===
+I (51298) root_node: Channel: 2 | Level: 1 (root)
+I (51298) root_node: Self MAC: 00:70:07:25:c3:b8
+I (51299) root_node: Router BSSID: 48:96:d9:70:a9:4a | RSSI: -36 dBm
+I (51305) root_node: Direct children: 1
+I (51309) root_node: Free heap: 196824 bytes
+I (51313) root_node:   Child[0]: 44:1d:64:f3:c2:70
+I (51317) root_node: ========================
+\end{lstlisting}
+
 \subsection{Pruebas de transmisión mesh}
 
-Se verificó la transmisión de imágenes a través de la red \gls{mesh}, comprobando el establecimiento inicial de la conexión entre nodos y la transferencia exitosa de las cargas útiles completas. Adicionalmente, se evaluó el tiempo de transmisión desde el nodo origen hasta el servidor y se observó el comportamiento del mecanismo de recuperación ante pérdidas de conectividad temporales.
+Se verificó la transmisión de imágenes a través de la red \gls{mesh}, comprobando la transferencia exitosa de las cargas útiles completas. Adicionalmente, se evaluó el tiempo de transmisión desde el nodo origen hasta el servidor y se observó el comportamiento del mecanismo de recuperación ante pérdidas de conectividad temporales. Como se detalla en la Figura~\ref{fig:log-transmision}, las marcas de tiempo (en milisegundos) provistas por el framework en cada línea del registro permiten calcular con precisión la demora de cada etapa del proceso. Por ejemplo, al sustraer el tiempo de inicio de la petición HTTP del tiempo de recepción de la respuesta exitosa, se evidencia un tiempo de envío en la red local inferior a medio segundo (aproximadamente \qty{463}{ms} para una carga útil de \qty{12.9}{KB}). Asimismo, el ciclo operativo completo del nodo —desde la detección de movimiento en el sensor hasta la confirmación de la carga al servidor— toma apenas \qty{1.27}{s}.
 
 % TODO: Agregar screenshot del log de transmisión
 \begin{figure}[htbp]
   \centering
-  % \includegraphics[width=\textwidth]{figures/log-transmision.png}
-  \fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}
-      [Screenshot del monitor serial mostrando transmisión exitosa]
-  \vspace{2cm}}}
+  \includegraphics[width=\textwidth]{img/logEnvioImagen.png}
   \caption{Log de transmisión de imagen a través de la red mesh.}
   \label{fig:log-transmision}
 \end{figure}
@@ -2679,7 +2704,9 @@ La latencia de extremo a extremo del sistema —definida como el tiempo transcur
   \item \textbf{Tamaño de la carga útil:} Las imágenes comprimidas en formato \gls{jpeg} presentan tamaños que oscilan entre \qty{30}{KB} y \qty{35}{KB}, un volumen de datos considerable para enlaces Wi-Fi de bajo consumo en configuraciones en malla.
 \end{itemize}
 
-Cabe destacar que, para el desarrollo de las pruebas de campo, el nodo raíz se vinculó a internet mediante un punto de acceso móvil (\textit{hotspot}) provisto por un teléfono celular, en lugar de utilizar un enrutador comercial dedicado. Si bien esta decisión logística permitió validar el despliegue del sistema en un entorno no urbanizado y carente de infraestructura, la variabilidad propia de las redes de telefonía móvil introdujo un grado de inestabilidad que impactó directamente en los tiempos de respuesta. Un enrutador fijo provisto de antenas de mayor ganancia ofrecería un canal ascendente más holgado, lo cual redundaría en una mejora sobre los tiempos observados.
+Para propósitos analíticos, es fundamental distinguir entre la latencia en condiciones ideales de red local (LAN) y la latencia de extremo a extremo experimentada en entornos de campo. En las pruebas de laboratorio, con el servidor operando en la misma subred que el nodo raíz, las métricas extraídas de los registros del microcontrolador indicaron tiempos sumamente reducidos. El tiempo puro de transmisión HTTP para una carga útil típica de \qty{12.9}{KB} fue de aproximadamente \qty{463}{ms}, resultando en un ciclo operativo completo en el nodo —desde la detección de movimiento hasta el fin de la carga— de tan solo \qty{1.27}{s}.
+
+En contraste, para el desarrollo de las pruebas de campo, el nodo raíz se vinculó a internet mediante un punto de acceso móvil (\textit{hotspot}) provisto por un teléfono celular. Durante las sesiones, se experimentó una cobertura deficiente de señal de telefonía móvil en el lugar de despliegue, lo cual introdujo un grado de inestabilidad y limitó el ancho de banda ascendente, impactando directamente en los tiempos de respuesta. Una conexión con mejor cobertura celular o el uso de un enrutador dedicado ofrecería un canal más estable, lo cual redundaría en una mejora significativa sobre los tiempos observados.
 
 Los tiempos documentados en la Tabla~\ref{tab:latencia} corresponden a valores empíricos aproximados obtenidos durante las sesiones de campo. Ante la ausencia de un conjunto de datos extenso y sistemático, estas métricas se presentan como indicadores del comportamiento operativo general bajo las condiciones de prueba detalladas.
 
