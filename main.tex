@@ -2733,7 +2733,6 @@ Además de detectar animales, las pruebas de campo demostraron la eficacia del s
   \label{fig:ejemplos-deteccion-campo}
 \end{figure}
 
-\newpage
 La Figura~\ref{fig:deteccion-ave-campo} presenta un caso particularmente relevante: la detección de un ave silvestre de pequeño porte alimentándose en el área monitoreada. El sistema logró identificar al animal con valores de confianza de 0.74 y 0.90 en capturas sucesivas, demostrando la capacidad de detectar fauna de reducido tamaño corporal en condiciones reales de campo.
 
 \begin{figure}[htbp]
@@ -2809,6 +2808,8 @@ Los resultados consolidados de estas observaciones se exponen en la Tabla~\ref{t
 
 Es importante destacar que el alcance útil reportado se refiere específicamente a la transmisión exitosa de imágenes (cargas útiles pesadas de entre \qtyrange{30}{50}{\kilo\byte}). En redes inalámbricas, a medida que la señal se degrada por la distancia y disminuye la relación señal-ruido (SNR), la probabilidad de pérdida de paquetes aumenta. La transmisión de una imagen requiere la fragmentación de los datos en decenas de paquetes (de \qty{1,4}{\kilo\byte}). A bajas tasas de modulación, esto implica tiempos prolongados de ocupación del medio inalámbrico (cientos de milisegundos), lo que expone los datos a mayores interferencias. Si bien a 15-20 metros el envío de un texto simple (un único paquete) sería altamente exitoso, la transmisión de una imagen experimenta una alta tasa de retransmisiones, dado que la probabilidad de éxito de la carga útil completa decae exponencialmente a medida que aumenta el número de fragmentos~\cite{sankarasubramaniam2003energy}. Esto congestiona la red y provoca desconexiones por tiempos de espera excedidos (\textit{timeouts}) en la capa de enrutamiento \gls{mesh}. Por consiguiente, la distancia máxima efectiva se ve fuertemente limitada por el tamaño de la carga útil.
 
+Con el propósito de extender el alcance efectivo entre los nodos, resultaría factible implementar una combinación de estrategias técnicas. Entre ellas se destacan el incremento de la potencia de transmisión (mediante modificaciones en el diseño del hardware o la incorporación de antenas de mayor ganancia), la reducción del umbral mínimo de RSSI en la configuración del firmware, y la minimización del tamaño de las cargas útiles mediante una mayor compresión de las imágenes. No obstante, dado que las distancias operativas obtenidas resultaron suficientes para validar la viabilidad técnica de la topología \gls{mesh} en el escenario propuesto ---cumpliendo así con los objetivos centrales del proyecto---, la implementación de estas optimizaciones fue diferida para ser abordada en trabajos futuros.
+
 \begin{table}[htbp]
   \centering
   \caption{Alcance máximo efectivo observado entre nodos adyacentes.}
@@ -2877,12 +2878,12 @@ La autonomía del nodo depende de la capacidad utilizable del pack de baterías 
 
 Sin embargo, el módulo regulador LM2596 (\gls{buck-converter}) requiere un margen de tensión (\textit{dropout}) de aproximadamente \qty{1.5}{V} por encima de su voltaje de salida (\qty{5}{V}), estableciendo un voltaje mínimo de entrada funcional de \qty{6.5}{V} (equivalente a \qty{3.25}{V} por celda). Cuando la tensión del pack cae por debajo de este umbral, el regulador no puede mantener una salida estable de \qty{5}{V}. Los picos de corriente característicos del ESP32-CAM durante la transmisión Wi-Fi (que pueden superar los \qty{300}{mA} instantáneos) provocan caídas momentáneas en la línea de alimentación, disparando la protección de \textit{brownout} del microcontrolador y reiniciándolo. Este comportamiento fue observado consistentemente durante las pruebas cuando la tensión de entrada al regulador descendía por debajo de \qtyrange{6}{7}{V}.
 
-En consecuencia, la capacidad efectivamente utilizable del pack es inferior a los \qty{3500}{mAh} nominales. Considerando la curva de descarga típica de las celdas 18650~\cite{powar2025discharge18650} y el corte práctico en \qty{3.25}{V} por celda, la capacidad aprovechable se reduce a aproximadamente un \qty{40}{\percent} de la nominal. La Figura~\ref{fig:curva-descarga} muestra la curva de descarga obtenida experimentalmente con las celdas utilizadas en el prototipo, donde se evidencia la caída pronunciada de tensión una vez superado el \qty{60}{\percent} de la capacidad.
+En consecuencia, la capacidad efectivamente utilizable del pack es inferior a los \qty{3500}{mAh} nominales. Considerando la curva de descarga típica de las celdas 18650~\cite{powar2025discharge18650} y el corte práctico en \qty{3.25}{V} por celda, la capacidad aprovechable se reduce a aproximadamente un \qty{40}{\percent} de la nominal. La Figura~\ref{fig:curva-descarga} ilustra esta curva de descarga de referencia, donde se evidencia la caída pronunciada de tensión una vez superado el \qty{60}{\percent} de la capacidad.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{img/curvaDescargaBateria.png}
-  \caption{Curva de descarga de las celdas 18650 utilizadas en el prototipo.}
+  \caption{Curva de descarga típica de celdas 18650\cite{powar2025discharge18650}.}
   \label{fig:curva-descarga}
 \end{figure}
 
@@ -3032,6 +3033,14 @@ líneas de trabajo futuro:
   \item[Mejoras en clasificación:] Entrenar o afinar modelos específicos
     para la fauna de la región del Bosque Atlántico, mejorando la
     precisión de clasificación para especies locales.
+
+  \item[Optimización del alcance entre nodos:] Investigar e implementar
+    estrategias conjuntas para extender la distancia operativa de los enlaces
+    en la red \gls{mesh}. Esto comprendería la evaluación de modificaciones a
+    nivel de hardware (como el uso de antenas de mayor ganancia), la
+    calibración de parámetros de red en el firmware (particularmente el
+    umbral de desconexión por RSSI), y el análisis del impacto de
+    reducir el tamaño de las imágenes transmitidas.
 
   \item[Interfaz de usuario:] Desarrollar una interfaz web más completa
     que permita visualización en mapa, gestión de múltiples despliegues
