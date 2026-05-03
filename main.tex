@@ -2378,6 +2378,7 @@ Los dispositivos se energizaron utilizando paquetes de baterías \glspl{18650} e
   \label{fig:hardware-ensamblado}
 \end{figure}
 
+\newpage
 \subsection{Entorno de software y servicios}
 
 A nivel de software, los dispositivos operaron con el firmware desarrollado sobre ESP-IDF (versión 5) y la biblioteca ESP-MESH-LITE.
@@ -2390,6 +2391,46 @@ server-project-bot          0.00%     21.93MiB   0.14%     3
 server-project-web          0.40%     56.11MiB   0.36%     4
 server-project-db           6.07%     20.51MiB   0.13%     6
 server-project-speciesnet   0.33%     69.67MiB   0.44%     1
+\end{lstlisting}
+
+El Listado~\ref{lst:log-servidor} muestra un extracto representativo de la salida combinada de los contenedores durante la operación normal del sistema. En él se identifican cuatro tipos de eventos concurrentes:
+
+\begin{itemize}
+  \item \textbf{bot-1}: Consultas periódicas a la API de Telegram mediante \texttt{getUpdates} (\textit{long polling}), verificando la existencia de nuevos mensajes o interacciones de los usuarios.
+  \item \textbf{speciesnet-1}: Verificaciones periódicas de salud del servicio (\texttt{GET /health}) y peticiones de inferencia (\texttt{POST /predict}) disparadas por la llegada de imágenes desde los nodos.
+  \item \textbf{web-1}: Recepción de imágenes cargadas por los nodos de cámara a través de la API REST (\texttt{POST /upload/}), cuya IP de origen corresponde a la del nodo raíz en la red local.
+  \item \textbf{db-1}: Operaciones internas de PostgreSQL (\textit{checkpoint}), que persisten periódicamente los datos modificados en memoria hacia el almacenamiento permanente.
+\end{itemize}
+
+Se observa la correlación temporal entre los eventos de carga (\texttt{web-1 POST /upload/}) y las predicciones subsiguientes (\texttt{speciesnet-1 POST /predict}), lo cual evidencia el encadenamiento correcto del pipeline de procesamiento: cada imagen recibida por el servicio web es enviada automáticamente al modelo de inferencia para su análisis.
+
+\begin{lstlisting}[caption={Extracto de los registros del servidor durante la recepción y procesamiento de imágenes.}, label=lst:log-servidor, numbers=none, basicstyle=\ttfamily\scriptsize, breaklines=true]
+bot-1         | INFO:httpx:HTTP Request: POST
+                https://api.telegram.org/bot<TOKEN>/getUpdates
+                "HTTP/1.1 200 OK"
+speciesnet-1  | INFO: 127.0.0.1:35346
+                - "GET /health HTTP/1.1" 200 OK
+bot-1         | INFO:httpx:HTTP Request: POST
+                https://api.telegram.org/bot<TOKEN>/getUpdates
+                "HTTP/1.1 200 OK"
+speciesnet-1  | INFO: 172.18.0.4:50210
+                - "POST /predict HTTP/1.1" 200 OK
+web-1         | 192.168.1.41:49356
+                - "POST /upload/ HTTP/1.1" 200
+speciesnet-1  | INFO: 127.0.0.1:36684
+                - "GET /health HTTP/1.1" 200 OK
+speciesnet-1  | INFO: 172.18.0.4:33932
+                - "POST /predict HTTP/1.1" 200 OK
+web-1         | 192.168.1.41:49357
+                - "POST /upload/ HTTP/1.1" 200
+db-1          | 2026-04-28 20:26:56.881 UTC [28] LOG:
+                checkpoint starting: time
+db-1          | 2026-04-28 20:26:57.196 UTC [28] LOG:
+                checkpoint complete: wrote 4 buffers (0.0%)
+speciesnet-1  | INFO: 172.18.0.4:58278
+                - "POST /predict HTTP/1.1" 200 OK
+web-1         | 192.168.1.41:49358
+                - "POST /upload/ HTTP/1.1" 200
 \end{lstlisting}
 
 \section{Pruebas de laboratorio}
