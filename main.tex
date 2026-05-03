@@ -3002,7 +3002,7 @@ análisis de los principales hallazgos:
 \begin{description}
   \item[Detección de fauna, personas y vehículos:] El sistema demostró capacidad de detección y clasificación para las tres categorías de interés. El modelo SpeciesNet, ejecutándose en el servidor sin GPU dedicada, procesó correctamente las imágenes capturadas por los nodos, generando detecciones con cuadros delimitadores y clasificación taxonómica para la fauna identificada (Figuras~\ref{fig:ejemplo-deteccion} y \ref{fig:ejemplos-deteccion-campo}).
   \item[Latencia de respuesta:] El tiempo transcurrido desde la detección de movimiento hasta la notificación en Telegram se situó en el orden de los \qty{40}{s} en promedio. Si bien no constituye tiempo real en sentido estricto, representa una mejora de varios órdenes de magnitud frente a las cámaras trampa convencionales, donde el acceso a las imágenes requiere días o semanas de recolección manual.
-  \item[Cobertura de red:] La red mesh operó de forma estable con distancias de hasta \qty{18}{m} en línea de vista directa y \qty{12}{m} con vegetación intermedia. Estas distancias, aunque limitadas por las antenas integradas de baja ganancia del ESP32-CAM, son suficientes para un despliegue en cadena con nodos intermedios (Relay).
+  \item[Cobertura de red:] La red mesh operó de forma estable con distancias de hasta \qty{18}{m} en línea de vista directa y \qty{12}{m} con vegetación intermedia. Estas distancias, aunque limitadas, son suficientes para un despliegue en cadena con nodos intermedios (Relay).
   \item[Autonomía energética:] Se logró una autonomía medida de \qty{5}{h} en modo Relay (\textit{Light Sleep}), mientras que el modo Leaf (\textit{Deep Sleep} + ULP) demostró un consumo en reposo de \qty{13}{mA}, lo que proyecta autonomías significativamente superiores para nodos que no requieren enrutamiento continuo.
 \end{description}
 
@@ -3038,9 +3038,9 @@ Los principales logros alcanzados incluyen:
     \gls{megadetector}).
 
   \item Se logró reducir significativamente el tiempo de procesamiento
-    de imágenes desde días o semanas ---típico de las \glspl{camara-trampa}
-    tradicionales--- a minutos, habilitando respuestas operativas
-    antes imposibles.
+    de imágenes desde días o semanas ---típico en los flujos de trabajo
+    con \glspl{camara-trampa} convencionales--- a escasos minutos,
+    habilitando respuestas operativas previamente inalcanzables.
 
   \item Se demostró que las redes \gls{mesh} basadas en \gls{ESP-MESH-LITE}
     son una alternativa viable para extender la cobertura de monitoreo
@@ -3178,13 +3178,14 @@ implementaciones:
     el uso de packs de \glspl{18650} en diversas configuraciones
     (2S, 3S, 4S).
 
-  \item \textbf{Selección del sensor de movimiento:} El sensor \gls{pir}
-    domótico utilizado en el prototipo (HC-SR501) está optimizado para
-    detectar personas y puede no activarse consistentemente ante fauna
-    de menor porte. Para despliegues enfocados en monitoreo de fauna
-    silvestre, se recomienda evaluar sensores \gls{pir} de mayor
-    sensibilidad o tecnologías alternativas de detección de movimiento
-    diseñadas para aplicaciones de vida silvestre.
+  \item \textbf{Selección del sensor de movimiento:} Si bien el sensor \gls{pir}
+    domótico utilizado en el prototipo (HC-SR501) superó las expectativas
+    al detectar fauna de pequeño porte, su alta sensibilidad en exteriores
+    generó un índice considerable de falsos positivos. Para despliegues
+    enfocados en el monitoreo estricto de fauna silvestre, se recomienda evaluar
+    sensores \gls{pir} de grado industrial o tecnologías alternativas de
+    detección de movimiento diseñadas específicamente para discriminar
+    variaciones térmicas ambientales y reducir activaciones espurias.
 
   \item \textbf{Monitoreo remoto:} Implementar sistemas de monitoreo de
     estado de los nodos (nivel de batería, conectividad) para
