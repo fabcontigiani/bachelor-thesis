@@ -2701,18 +2701,113 @@ Las pruebas de campo se realizaron bajo las siguientes condiciones:
   \item Distancia al router Wi-Fi: 15 metros
 \end{itemize}
 
+\newpage
 \subsection{Resultados obtenidos}
 
-Durante las pruebas de campo se registraron los siguientes resultados:
+Durante las pruebas de campo se registraron los siguientes resultados.
+
+\subsubsection{Desempeño del modelo de inferencia}
+
+El desempeño del modelo se evaluó sobre un conjunto de 94 imágenes de prueba
+capturadas en condiciones de campo. Para cada imagen, la salida
+del servicio de inferencia fue contrastada con la etiqueta real, construyéndose
+las matrices de confusión que se presentan en la Figura~\ref{fig:matrices-confusion}.
+
+\paragraph{Detección binaria.}
+La Figura~\ref{fig:confusion-binaria} presenta la matriz de confusión para la
+tarea de detección binaria, donde el modelo distingue entre imágenes que
+contienen algún objeto de interés (\textit{Positivo}: fauna, personas o vehículos)
+e imágenes sin objeto (\textit{Negativo}: blanco). Los resultados se resumen en
+la Tabla~\ref{tab:metricas-binarias}.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Métricas de clasificación binaria del modelo de inferencia.}
+  \label{tab:metricas-binarias}
+  \begin{tblr}{
+      colspec = {X[l] r},
+      row{1} = {font=\bfseries},
+      hlines,
+    }
+    Métrica      & Valor  \\
+    Verdaderos Positivos (TP)  & 30     \\
+    Verdaderos Negativos (TN)  & 43     \\
+    Falsos Positivos (FP)      & 8      \\
+    Falsos Negativos (FN)      & 13     \\
+    Exactitud (\textit{Accuracy})   & 77{,}7\% \\
+    Precisión (\textit{Precision})  & 78{,}9\% \\
+    Exhaustividad (\textit{Recall}) & 69{,}8\% \\
+  \end{tblr}
+\end{table}
+
+El modelo demostró una exactitud general del 77{,}7\%. Se registraron 8 falsos
+positivos (imágenes en blanco clasificadas erróneamente como positivas) y
+13 falsos negativos (imágenes con objetos reales que el modelo no detectó).
+En el contexto del sistema propuesto, los falsos negativos representan el error
+más crítico, ya que implican eventos de interés no reportados. Sin embargo, dado
+que el objetivo principal no es alcanzar precisión perfecta en la inferencia
+inicial, sino integrar el modelo como asistente dentro de un enfoque
+\textit{Human-in-the-loop}, ambos tipos de error son tolerados. A futuro, los
+datos corregidos por el usuario podrán emplearse para aplicar técnicas de
+\textit{fine-tuning} o \textit{transfer learning} sobre el modelo base.
+
+\paragraph{Clasificación multiclase.}
+La Figura~\ref{fig:confusion-multiclase} presenta la matriz de confusión para
+la tarea de clasificación multiclase, donde cada detección positiva es asignada
+a una de las cuatro categorías: \textit{blanco}, \textit{animales},
+\textit{personas} o \textit{vehículos}. El análisis por clase revela
+comportamientos diferenciados:
 
 \begin{itemize}
-  \item Imágenes capturadas: 131
-  \item Detecciones exitosas: ~90\%
-  \item Falsas activaciones: ~10\%
-  \item Tiempo de operación sin fallos: 7 horas en dos intervalos, el primero de 4 horas y el segundo de 3 horas.
+  \item \textbf{Blanco:} 43 de 51 muestras correctamente clasificadas
+    (Recall = 84{,}3\%). Los 8 errores restantes corresponden a imágenes en
+    blanco clasificadas como \textit{animales} (6) y \textit{personas} (2).
+  \item \textbf{Animales:} 9 de 17 muestras correctamente clasificadas
+    (Recall = 52{,}9\%). Es la clase con menor desempeño: 8 imágenes reales de
+    animales fueron predichas como \textit{blanco}, lo que refleja la dificultad
+    inherente de detectar fauna silvestre en entornos naturales con variaciones
+    de iluminación y tamaño del sujeto.
+  \item \textbf{Personas:} 17 de 22 muestras correctamente clasificadas
+    (Recall = 77{,}3\%), con 5 casos confundidos con \textit{blanco}. La
+    precisión es elevada (89{,}5\%), lo que indica que cuando el modelo predice
+    una persona, rara vez se equivoca.
+  \item \textbf{Vehículos:} 2 de 2 muestras correctamente clasificadas
+    (Recall = 100\%, Precision = 100\%), aunque el tamaño reducido de esta clase
+    limita la generalización de este resultado.
 \end{itemize}
 
-Además de detectar animales, las pruebas de campo demostraron la eficacia del sistema como herramienta de seguridad y vigilancia perimetral. La Figura~\ref{fig:ejemplos-deteccion-campo} ilustra detecciones exitosas de intrusos y vehículos no autorizados en el predio.
+El principal vector de error del modelo es la confusión entre la clase
+\textit{animales} y \textit{blanco}, consistente con la naturaleza del conjunto
+de datos de prueba, donde la fauna de pequeño y mediano porte puede confundirse
+fácilmente con el fondo en imágenes de cámara trampa. No obstante, el servicio
+de inferencia opera correctamente de forma integrada al sistema y es capaz de
+detectar los eventos de interés definidos en los objetivos del trabajo.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{img/confusion_matrix_binary.png}
+    \caption{Detección binaria (Positivo vs.\ Negativo).}
+    \label{fig:confusion-binaria}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{img/confusion_matrix.png}
+    \caption{Clasificación multiclase.}
+    \label{fig:confusion-multiclase}
+  \end{subfigure}
+  \caption{Matrices de confusión obtenidas con el conjunto de imágenes de prueba.}
+  \label{fig:matrices-confusion}
+\end{figure}
+
+\subsubsection{Detección de eventos en campo}
+
+Además de la evaluación cuantitativa, las pruebas de campo demostraron la eficacia
+del sistema como herramienta de seguridad y vigilancia perimetral. La
+Figura~\ref{fig:ejemplos-deteccion-campo} ilustra detecciones exitosas de intrusos
+y vehículos no autorizados en el predio.
 
 \begin{figure}[htbp]
   \centering
