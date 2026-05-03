@@ -2478,6 +2478,30 @@ I (51313) root_node:   Child[0]: 44:1d:64:f3:c2:70
 I (51317) root_node: ========================
 \end{lstlisting}
 
+De manera complementaria, el Listado~\ref{lst:log-desconexion} documenta el proceso inverso: la desconexión de un nodo hijo de la red mesh. En el extracto se observa que el nodo raíz reporta inicialmente un hijo directo (\texttt{Direct children: 1}). Segundos después, la capa Wi-Fi detecta la inactividad del nodo hijo mediante un temporizador interno (\texttt{inactive timer}), registrando su salida con \texttt{reason = 4} (desasociación por inactividad). En el siguiente ciclo de reporte de estado ---configurado con un intervalo de \qty{10}{s}--- el nodo raíz refleja la actualización: \texttt{Direct children: 0}, acompañada de la liberación de memoria heap que ocupaba la entrada en la tabla de ruteo.
+
+\begin{lstlisting}[caption={Registro de consola mostrando la desconexión de un nodo de la red mesh.}, label=lst:log-desconexion, numbers=none, basicstyle=\ttfamily\scriptsize]
+I (261297) root_node: === ROOT NODE STATUS ===
+I (261298) root_node: Channel: 2 | Level: 1 (root)
+I (261298) root_node: Self MAC: 00:70:07:25:c3:b8
+I (261299) root_node: Router BSSID: 48:96:d9:70:a9:4a | RSSI: -31 dBm
+I (261306) root_node: Direct children: 1
+I (261309) root_node: Free heap: 196728 bytes
+I (261313) root_node:   Child[0]: 44:1d:64:f3:c2:70
+I (261318) root_node: ========================
+W (267153) wifi:inactive timer: now=fe17b48 last_rx=c488fba
+         diff=ebc1, aid[1]44:1d:64:f3:c2:70 leave
+I (267177) wifi:station: 44:1d:64:f3:c2:70 leave,
+         AID = 1, reason = 4
+I (271297) root_node: === ROOT NODE STATUS ===
+I (271298) root_node: Channel: 2 | Level: 1 (root)
+I (271298) root_node: Self MAC: 00:70:07:25:c3:b8
+I (271299) root_node: Router BSSID: 48:96:d9:70:a9:4a | RSSI: -33 dBm
+I (271306) root_node: Direct children: 0
+I (271309) root_node: Free heap: 198980 bytes
+I (271313) root_node: ========================
+\end{lstlisting}
+
 \subsection{Pruebas de transmisión mesh}
 
 Se verificó la transmisión de imágenes a través de la red \gls{mesh}, comprobando la transferencia exitosa de las cargas útiles completas. Adicionalmente, se evaluó el tiempo de transmisión desde el nodo origen hasta el servidor y se observó el comportamiento del mecanismo de recuperación ante pérdidas de conectividad temporales. Como se detalla en la Figura~\ref{fig:log-transmision}, las marcas de tiempo (en milisegundos) provistas por el framework en cada línea del registro permiten calcular con precisión la demora de cada etapa del proceso. Por ejemplo, al sustraer el tiempo de inicio de la petición HTTP del tiempo de recepción de la respuesta exitosa, se evidencia un tiempo de envío en la red local inferior a medio segundo (aproximadamente \qty{463}{ms} para una carga útil de \qty{12.9}{KB}). Asimismo, el ciclo operativo completo del nodo —desde la detección de movimiento en el sensor hasta la confirmación de la carga al servidor— toma apenas \qty{1.27}{s}.
