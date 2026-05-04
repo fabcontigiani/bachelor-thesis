@@ -2713,13 +2713,51 @@ capturadas en condiciones de campo. Para cada imagen, la salida
 del servicio de inferencia fue contrastada con la etiqueta real, construyéndose
 las matrices de confusión que se presentan en la Figura~\ref{fig:matrices-confusion}.
 
-\paragraph{Detección binaria.}
-La Figura~\ref{fig:confusion-binaria} presenta la matriz de confusión para la
-tarea de detección binaria, donde el modelo distingue entre imágenes que
-contienen algún objeto de interés (\textit{Positivo}: fauna, personas o vehículos)
-e imágenes sin objeto (\textit{Negativo}: blanco). Los resultados se resumen en
-la Tabla~\ref{tab:metricas-binarias}.
+\paragraph{Lógica de umbrales de detección.}
+Antes de interpretar las matrices, es necesario comprender la lógica de decisión
+que el sistema aplica sobre la salida de \gls{speciesnet}. El modelo produce dos
+resultados independientes para cada imagen: un puntaje de detección
+(\textit{bounding box confidence}), que indica la confianza de que exista algún
+objeto en la escena, y una clasificación de especie, que categoriza dicho
+objeto. El sistema combina ambos resultados mediante tres umbrales configurables
+para decidir si la imagen debe enviarse al Telegram:
 
+\begin{description}
+  \item[\texttt{DETECTION\_HIGH} = 0{,}80:]
+    Si la confianza de detección supera el 80\%, la imagen se acepta y transmite
+    de forma inmediata, independientemente de lo que indique el clasificador de
+    especies. Este umbral cubre los casos de alta certeza donde el modelo no tiene
+    dudas sobre la presencia de un objeto.
+
+  \item[\texttt{DETECTION\_MID} = 0{,}50:]
+    Si la confianza de detección se encuentra entre el 50\% y el 80\%, pero el
+    clasificador señala que la imagen está vacía (\textit{blank}), el sistema opta
+    por transmitirla igualmente. Esta regla está diseñada para evitar la pérdida
+    de detecciones de animales pequeños o lejanos, cuya silueta puede no ser lo
+    suficientemente distintiva para el clasificador, pero sí activa el detector
+    de objetos.
+
+    \item[\texttt{DETECTION\_LOW} = 0{,}30:]
+    Si la confianza de detección es inferior al 30\% y el clasificador también
+    indica imagen vacía, la imagen se descarta. En este caso el sistema asume que
+    se trata de un probable falso positivo del sensor de movimiento, como el
+    balanceo de ramas por el viento.
+\end{description}
+
+Esta lógica de tres niveles permite al sistema operar con una política de
+sesgo hacia la sensibilidad: ante la duda, se prefiere transmitir la imagen y
+delegar la decisión final al operador humano, reduciendo el riesgo de perder
+eventos reales a costa de aceptar algunas falsas alarmas.
+
+\paragraph{Detección binaria.}
+Teniendo en cuenta la lógica anterior, la Figura~\ref{fig:confusion-binaria}
+presenta la matriz de confusión para la tarea de detección binaria, donde el
+modelo distingue entre imágenes que contienen algún objeto de interés
+(\textit{Positivo}: fauna, personas o vehículos) e imágenes sin objeto
+(\textit{Negativo}: blanco). Los resultados se resumen en la
+Tabla~\ref{tab:metricas-binarias}.
+
+\newpage
 \begin{table}[htbp]
   \centering
   \caption{Métricas de clasificación binaria del modelo de inferencia.}
