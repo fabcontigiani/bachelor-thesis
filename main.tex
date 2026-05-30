@@ -6,6 +6,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish,es-tabla]{babel}
 \usepackage{csquotes}
+\usepackage[htt]{hyphenat}
 
 % Imágenes
 \usepackage{graphicx}
@@ -494,10 +495,10 @@ basado en \gls{edge-computing} de Mallya (AiCatcher) \cite{mallya2019aicatcher}.
     Infraestructura requerida    & Ninguna     & Operador Celular                  & Red Satelital                       & Puerta de enlace \gls{lora}           \\
     Procesamiento de \gls{ia}    & Post-hoc    & No / Limitado                     & Edge (Hardware Dedicado)            & Edge (Raspberry Pi)                   \\
     Costo de adquisición         & Bajo-Medio  & Medio-Alto                        & Muy Alto                            & Medio-Alto                            \\
-    Costo Operativo              & Bajo        & Alto (Plan mensual)               & Muy Alto (Iridium)                  & Bajo (SMS/Twilio)                     \\
+    Costo Operativo              & Bajo        & Alto (Plan mensual)               & Muy Alto (Iridium)                  & Bajo (SMS/\allowbreak Twilio)          \\
     Autonomía energética         & Muy Alta    & Media                             & Media-Baja                          & Baja (Raspberry Pi)                   \\
     Escalabilidad                & Laboriosa   & Por suscripción                   & Costo-prohibitiva                   & Media (\gls{lora})                    \\
-    Dependencia de terceros      & No          & Muy Alta                          & Muy Alta                            & Media (Twilio)                        \\
+    Dependencia de terceros      & No          & Muy Alta                          & Muy Alta                            & Media\allowbreak\ (Twilio)             \\
   \end{tblr}
 \end{table}
 
@@ -2363,8 +2364,8 @@ voltaje a \qty{5}{V} para alimentar el ESP32-CAM.
 Para maximizar la autonomía sin comprometer la conectividad de la red, el sistema implementa una arquitectura híbrida de gestión de energía, donde el consumo varía drásticamente según el rol y el estado de operación:
 
 \begin{description}
-  \item[Modo Híbrido - Relay (\textit{Light Sleep + Modem Sleep}):] Los nodos intermedios deben mantener su conexión a la red \gls{ESP-MESH-LITE} para no romper la topología y permitir el enrutamiento. Utilizan un modo de ahorro donde la radio Wi-Fi se apaga parcialmente entre balizas y el CPU entra en \textit{Light Sleep}. Este estado reduce el consumo, pero requiere que el nodo esté parcialmente activo.
-  \item[Modo Híbrido - Leaf (\textit{Deep Sleep + ULP}):] Los nodos terminales, al no enrutar tráfico de terceros, entran en un estado de \textit{Deep Sleep} desconectándose completamente de la red. El consumo se reduce drásticamente (alrededor de \qty{10}{mA} a \qty{15}{mA} reales medidos en el prototipo, atribuibles mayormente al módulo regulador y la placa), ya que el trabajo de monitoreo queda exclusivamente a cargo del coprocesador ULP.
+  \item[Modo Híbrido - Relay] (\textit{Light Sleep + Modem Sleep}): Los nodos intermedios deben mantener su conexión a la red \gls{ESP-MESH-LITE} para no romper la topología y permitir el enrutamiento. Utilizan un modo de ahorro donde la radio Wi-Fi se apaga parcialmente entre balizas y el CPU entra en \textit{Light Sleep}. Este estado reduce el consumo, pero requiere que el nodo esté parcialmente activo.
+  \item[Modo Híbrido - Leaf] (\textit{Deep Sleep + ULP}): Los nodos terminales, al no enrutar tráfico de terceros, entran en un estado de \textit{Deep Sleep} desconectándose completamente de la red. El consumo se reduce drásticamente (alrededor de \qty{10}{mA} a \qty{15}{mA} reales medidos en el prototipo, atribuibles mayormente al módulo regulador y la placa), ya que el trabajo de monitoreo queda exclusivamente a cargo del coprocesador ULP.
   \item[Captura de imagen:] Consumo elevado momentáneo durante la activación
     del sensor OV2640, la captura de la imagen y la compresión \gls{jpeg}
     en hardware.
@@ -2608,7 +2609,7 @@ Se verificó el funcionamiento del bot de Telegram:
 
 \newpage
 
-\subsection{Pruebas de retroalimentación interactiva (\textit{Human-in-the-loop})}
+\subsection{Pruebas de retroalimentación interactiva (\textit{Human-\allowbreak in-\allowbreak the-\allowbreak loop})}
 
 Se evaluó el mecanismo de corrección manual integrado entre el bot de Telegram y el servidor web. Para ello, se partió de una clasificación inicial errónea generada por el modelo (Figura~\ref{fig:hitl-1}). A través de la interfaz del bot, el usuario indicó que la clasificación no era correcta (Figura~\ref{fig:hitl-2}) y seleccionó la etiqueta adecuada (\textit{human}) desde la lista de predicciones alternativas sugeridas (Figura~\ref{fig:hitl-3}). Una vez confirmada la selección, el sistema actualizó el registro en la base de datos, reflejando inmediatamente el resultado corregido y marcando el evento como auditado por el usuario en el panel de monitoreo web (Figura~\ref{fig:hitl-4}).
 
@@ -2659,14 +2660,14 @@ los nodos de cámara en ubicaciones representativas de un despliegue real.
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[height=8cm]{img/nodoCampo1Lejos.jpg}
+    \includegraphics[height=8cm, width=\textwidth, keepaspectratio]{img/nodoCampo1Lejos.jpg}
     \caption{Vista general}
     \label{fig:despliegue-campo-1-lejos}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[height=8cm]{img/nodoCampo1.jpg}
+    \includegraphics[height=8cm, width=\textwidth, keepaspectratio]{img/nodoCampo1.jpg}
     \caption{Acercamiento con zoom digital 10x}
     \label{fig:despliegue-campo-1-zoom}
   \end{subfigure}
@@ -2678,14 +2679,14 @@ los nodos de cámara en ubicaciones representativas de un despliegue real.
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[height=10cm]{img/nodoCampo2Lejos.jpg}
+    \includegraphics[height=10cm, width=\textwidth, keepaspectratio]{img/nodoCampo2Lejos.jpg}
     \caption{Vista general}
     \label{fig:despliegue-campo-2-lejos}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[height=10cm]{img/nodoCampo2.jpg}
+    \includegraphics[height=10cm, width=\textwidth, keepaspectratio]{img/nodoCampo2.jpg}
     \caption{Primer plano del nodo}
     \label{fig:despliegue-campo-2-cerca}
   \end{subfigure}
@@ -2697,14 +2698,14 @@ los nodos de cámara en ubicaciones representativas de un despliegue real.
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[height=10cm]{img/nodoCampo3b.jpg}
+    \includegraphics[height=10cm, width=\textwidth, keepaspectratio]{img/nodoCampo3b.jpg}
     \caption{Vista general}
     \label{fig:despliegue-campo-3-a}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[height=10cm]{img/nodoCampo3a.jpg}
+    \includegraphics[height=10cm, width=\textwidth, keepaspectratio]{img/nodoCampo3a.jpg}
     \caption{Ángulo alternativo}
     \label{fig:despliegue-campo-3-b}
   \end{subfigure}
@@ -3167,7 +3168,7 @@ líneas de trabajo futuro:
     LoRa, redes celulares (4G/LTE) o enlaces satelitales, permitiendo
     despliegues en zonas remotas sin cobertura de internet convencional.
 
-  \item[Optimización del consumo energético:] Investigar estrategias
+  \item[Ahorro de energía:] Investigar estrategias
     adicionales de ahorro de energía, incluyendo paneles solares y
     algoritmos de gestión de batería más sofisticados.
 
@@ -3203,7 +3204,7 @@ líneas de trabajo futuro:
     que permita visualización en mapa, gestión de múltiples despliegues
     y generación de reportes automatizados.
 
-  \item[Actualización de firmware por OTA:] Implementar un mecanismo de
+  \item[Actualización OTA:] Implementar un mecanismo de
     actualización de firmware inalámbrica (\textit{Over-The-Air}) que
     permita desplegar nuevas versiones del software en los nodos de
     cámara sin necesidad de recolectarlos físicamente. El ESP32 soporta
@@ -3346,7 +3347,7 @@ activa el Light Sleep automático con escalamiento dinámico de frecuencia entre
 El servidor de detección implementa una versión extendida del API de \gls{speciesnet}
 que, además de realizar la \gls{inferencia}, dibuja los cuadros delimitadores
 sobre las detecciones y guarda las imágenes anotadas. El código está contenido
-en \texttt{main.py} del repositorio \texttt{wildlife-detection-capstone-project}.
+en \texttt{main.py} del repositorio \texttt{wildlife-\allowbreak detection-\allowbreak capstone-\allowbreak project}.
 
 El código~\ref{lst:save-annotated} presenta la función \texttt{save\_annotated\_image()},
 que utiliza la biblioteca PIL para dibujar los cuadros delimitadores sobre la
@@ -3471,11 +3472,11 @@ configuración del entorno.
 Las variables de entorno principales son:
 
 \begin{description}
-  \item[DJANGO\_SECRET\_KEY:] Clave secreta de Django para producción.
-  \item[POSTGRES\_DB, POSTGRES\_USER, POSTGRES\_PASSWORD:] Credenciales
+  \item[DJANGO\_\allowbreak SECRET\_\allowbreak KEY:] Clave secreta de Django para producción.
+  \item[POSTGRES\_\allowbreak DB, POSTGRES\_\allowbreak USER, POSTGRES\_\allowbreak PASSWORD:] Credenciales
     de la base de datos PostgreSQL.
-  \item[TELEGRAM\_BOT\_TOKEN:] Token del bot de Telegram (requerido).
-  \item[GUNICORN\_WORKERS:] Número de workers de Gunicorn (por defecto, 2).
+  \item[TELEGRAM\_\allowbreak BOT\_\allowbreak TOKEN:] Token del bot de Telegram (requerido).
+  \item[GUNICORN\_\allowbreak WORKERS:] Número de workers de Gunicorn (por defecto, 2).
 \end{description}
 
 \subsection{Inicio de los servicios}
@@ -3615,14 +3616,14 @@ La respuesta incluye:
 
 \begin{description}
   \item[SpeciesNet no responde:] Verificar el estado del contenedor
-    con \lstinline[language=bash]{docker compose logs speciesnet}.
+    con \texttt{docker compose\allowbreak\ logs\allowbreak\ speciesnet}.
     La descarga del modelo puede tardar varios minutos en la primera
     ejecución.
   \item[Bot de Telegram sin respuesta:] Verificar que el token
     esté configurado correctamente en \texttt{.env} y revisar
-    los logs con \lstinline[language=bash]{docker compose logs bot}.
+    los logs con \texttt{docker compose\allowbreak\ logs\allowbreak\ bot}.
   \item[Imágenes no procesadas:] Verificar que todos los servicios
-    estén en ejecución con \lstinline[language=bash]{docker compose ps}
+    estén en ejecución con \texttt{docker compose\allowbreak\ ps}
     y revisar los logs del servicio web.
 \end{description}
 
